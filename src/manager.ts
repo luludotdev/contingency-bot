@@ -1,12 +1,14 @@
 import type { GuildMember } from 'discord.js'
+import { ROLE_WEIGHTS, VOTING_WEIGHT } from '~env/index.js'
 
 export interface Manager {
   startVote(initiator: GuildMember, target: GuildMember): Promise<void>
   voteInProgress(): boolean
   cancelVote(): void
 
-  canVote(member: GuildMember): boolean
   voteWeight(member: GuildMember): number
+  canInitiate(member: GuildMember): boolean
+  canVote(member: GuildMember): boolean
   castVote(member: GuildMember): void
 
   isInitiator(member: GuildMember): boolean
@@ -48,17 +50,23 @@ export const createManager: () => Manager = () => {
       vote = null
     },
 
-    canVote(member) {
-      // TODO
-      throw new Error('Not Implemented')
+    voteWeight(member) {
+      const roleTest = member.roles.cache
+        .map(role => ROLE_WEIGHTS.get(role.id))
+        .filter((weight): weight is number => typeof weight !== 'undefined')
+
+      if (roleTest.length === 0) return 0
+      return Math.max(...roleTest)
     },
 
-    voteWeight(member) {
-      const hasRole = this.canVote(member)
-      if (hasRole === false) return 0
+    canInitiate(member) {
+      const weight = this.voteWeight(member)
+      return weight >= VOTING_WEIGHT
+    },
 
-      // TODO
-      throw new Error('Not Implemented')
+    canVote(member) {
+      const weight = this.voteWeight(member)
+      return weight > 0
     },
 
     castVote(member) {
