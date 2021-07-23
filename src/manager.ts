@@ -2,14 +2,14 @@ import type { GuildMember } from 'discord.js'
 import { ROLE_WEIGHTS, VOTING_WEIGHT } from '~env/index.js'
 
 export interface Manager {
-  startVote(initiator: GuildMember, target: GuildMember): Promise<void>
+  startVote(initiator: GuildMember, target: GuildMember): Vote
   voteInProgress(): boolean
   cancelVote(): void
 
   voteWeight(member: GuildMember): number
   canInitiate(member: GuildMember): boolean
   canVote(member: GuildMember): boolean
-  castVote(member: GuildMember): void
+  castVote(member: GuildMember): Vote
 
   isInitiator(member: GuildMember): boolean
   isTarget(member: GuildMember): boolean
@@ -31,7 +31,7 @@ export const createManager: () => Manager = () => {
   let vote: Vote | null = null
 
   return {
-    async startVote(initiator, target) {
+    startVote(initiator, target) {
       if (vote !== null) {
         throw new Error('a vote is already in progress')
       }
@@ -52,6 +52,7 @@ export const createManager: () => Manager = () => {
       }
 
       vote = newVote
+      return vote
     },
 
     voteInProgress() {
