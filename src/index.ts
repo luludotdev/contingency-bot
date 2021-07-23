@@ -1,12 +1,10 @@
+import 'source-map-support/register.js'
+
 import { field } from '@lolpants/jogger'
 import { Client } from 'discord.js'
-import sourceMapSupport from 'source-map-support'
 import { TOKEN } from './env/index.js'
 import { exitHook } from './exit.js'
 import { errorField, flush, logger } from './logger.js'
-
-// Enable Source Maps
-sourceMapSupport.install()
 
 const client = new Client()
 client.on('ready', () => {
