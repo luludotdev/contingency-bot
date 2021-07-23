@@ -1,12 +1,23 @@
 import { field } from '@lolpants/jogger'
+import { Client } from 'discord.js'
 import sourceMapSupport from 'source-map-support'
+import { TOKEN } from './env/index.js'
 import { exitHook } from './exit.js'
 import { errorField, flush, logger } from './logger.js'
 
 // Enable Source Maps
 sourceMapSupport.install()
 
+const client = new Client()
+client.on('ready', () => {
+  logger.info(
+    field('action', 'ready'),
+    field('user', client.user?.tag ?? 'Unknown')
+  )
+})
+
 exitHook(async (exit, error) => {
+  client.destroy()
   if (error) {
     logger.error(errorField(error))
   } else {
@@ -16,3 +27,5 @@ exitHook(async (exit, error) => {
   await flush()
   exit()
 })
+
+void client.login(TOKEN)
