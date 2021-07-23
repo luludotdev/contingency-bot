@@ -9,5 +9,19 @@ export const vote__approve: Handler = async ({ manager, button }) => {
     embed.setColor(Colours.GREY)
 
     await cancelVote(button, embed)
+    return
   }
+
+  if (manager.isTarget(button.clicker.member)) {
+    await button.reply.send(
+      'You may not approve as you are the target of this vote.',
+      // @ts-expect-error
+      true
+    )
+
+    return
+  }
+
+  // TODO
+  console.log('vote@approve')
 }
