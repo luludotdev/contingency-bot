@@ -80,7 +80,7 @@ export const init__confirm: Handler = async ({
   const initiator = button.clicker.member
   const vote = manager.startVote(initiator, target)
 
-  const description = `${initiator} has started a vote to strip roles from ${target}.`
+  const description = `${initiator} has started a vote to strip roles from ${target}`
   const embed = generateEmbed({ description, votes: vote.voters })
 
   const rolesString = roles.map(role => role.toString()).join(' ')
