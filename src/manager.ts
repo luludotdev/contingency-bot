@@ -8,6 +8,9 @@ export interface Manager {
   canVote(member: GuildMember): boolean
   voteWeight(member: GuildMember): number
   castVote(member: GuildMember): void
+
+  isInitiator(member: GuildMember): boolean
+  isTarget(member: GuildMember): boolean
 }
 
 interface Vote {
@@ -58,6 +61,16 @@ export const createManager: (client: Client) => Manager = client => {
     castVote(member) {
       // TODO
       throw new Error('Not Implemented')
+    },
+
+    isInitiator(member) {
+      if (vote === null) throw new Error('no vote in progress')
+      return member.id === vote.initiator.id
+    },
+
+    isTarget(member) {
+      if (vote === null) throw new Error('no vote in progress')
+      return member.id === vote.target.id
     },
   }
 }
