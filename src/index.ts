@@ -2,7 +2,7 @@ import 'source-map-support/register.js'
 
 import { field } from '@lolpants/jogger'
 import buttons, { MessageButton } from 'discord-buttons'
-import { Client } from 'discord.js'
+import { Client, Intents } from 'discord.js'
 import { GUILD_ID, TOKEN } from '~env/index.js'
 import type { HandlerParameters } from '~interactions/index.js'
 import { interactionID, parseInteractionID } from '~interactions/index.js'
@@ -16,7 +16,7 @@ import { createManager } from '~manager.js'
 import { exitHook } from './exit.js'
 
 const manager = createManager()
-const client = new Client()
+const client = new Client({ ws: { intents: Intents.ALL } })
 buttons(client)
 
 client.on('ready', async () => {
