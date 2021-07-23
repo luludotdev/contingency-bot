@@ -55,6 +55,11 @@ export const init__confirm: Handler = async ({
     .setID(interactionID('vote', 'approve'))
     .setStyle('blurple')
 
+  const revokeButton = new MessageButton()
+    .setLabel('Revoke Approval')
+    .setID(interactionID('vote', 'revoke'))
+    .setStyle('gray')
+
   const cancelButton = new MessageButton()
     .setLabel('Cancel')
     .setID(interactionID('vote', 'cancel', userID))
@@ -71,6 +76,6 @@ export const init__confirm: Handler = async ({
   await manager.startVote(initiator, target)
   await button.message.channel.send({
     embed,
-    buttons: [approveButton, cancelButton],
+    buttons: [approveButton, revokeButton, cancelButton],
   })
 }
