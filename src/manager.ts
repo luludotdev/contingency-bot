@@ -11,6 +11,7 @@ export interface Manager {
   canVote(member: GuildMember): boolean
 
   castVote(member: GuildMember): Vote
+  revokeVote(member: GuildMember): Vote
   hasVoted(member: GuildMember): boolean
 
   isInitiator(member: GuildMember): boolean
@@ -108,6 +109,14 @@ export const createManager: () => Manager = () => {
       const weight = this.voteWeight(member)
       vote.votes.set(member.id, [member, weight])
 
+      return vote
+    },
+
+    revokeVote(member) {
+      if (vote === null) throw new Error('no vote in progress')
+      if (!this.canVote(member)) throw new Error('not allowed')
+
+      vote.votes.delete(member.id)
       return vote
     },
 
