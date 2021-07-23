@@ -53,7 +53,16 @@ export const createManager: () => Manager = () => {
           return score
         },
         get voters() {
-          return [...this.votes.values()]
+          const values = [...this.votes.values()]
+          values.sort(([member_a, weight_a], [member_b, weight_b]) =>
+            weight_a > weight_b
+              ? -1
+              : weight_a < weight_b
+              ? 1
+              : member_a.user.username.localeCompare(member_b.user.username)
+          )
+
+          return values
             .map(([member, weight]) => `• ${member} (${weight})`)
             .join('\n')
         },
