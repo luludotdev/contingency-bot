@@ -1,5 +1,7 @@
 import { MessageButton } from 'discord-buttons'
 import type { MessageComponent } from 'discord-buttons'
+import { MessageEmbed } from 'discord.js'
+import type { ColorResolvable } from 'discord.js'
 import { interactionID } from '~interactions/index.js'
 import { sleepMS } from '~utils.js'
 
@@ -42,4 +44,21 @@ export const cancelConfirmation = async (
 
   await sleepMS(delay)
   if (button.message.deletable) await button.message.delete()
+}
+
+interface EmbedOptions {
+  description: string
+  colour?: ColorResolvable
+}
+
+export const generateEmbed: (options: EmbedOptions) => MessageEmbed = ({
+  description,
+  colour,
+}) => {
+  const embed = new MessageEmbed()
+    .setTitle('Emergency Vote')
+    .setColor(colour ?? 0xed_42_45)
+    .setDescription(description)
+
+  return embed
 }
