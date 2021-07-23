@@ -1,7 +1,7 @@
 import 'source-map-support/register.js'
 
 import { field } from '@lolpants/jogger'
-import buttons from 'discord-buttons'
+import buttons, { MessageButton } from 'discord-buttons'
 import { Client } from 'discord.js'
 import { GUILD_ID, TOKEN } from './env/index.js'
 import { exitHook } from './exit.js'
@@ -37,8 +37,57 @@ client.on('message', async message => {
     return
   }
 
-  console.log({ target })
-  // TODO: Start Vote
+  const confirmButton = new MessageButton()
+    .setLabel('Confirm')
+    .setID(`confirm/${message.author.id}`)
+    .setStyle('green')
+
+  const cancelButton = new MessageButton()
+    .setLabel('Cancel')
+    .setID(`cancel/${message.author.id}`)
+    .setStyle('red')
+
+  await message.channel.send('Are you sure you want to start a vote?', {
+    buttons: [confirmButton, cancelButton],
+  })
+})
+
+client.on('clickButton', async button => {
+  const [id, userID] = button.id.split('/')
+  if (!id || !userID) return
+
+  if (button.clicker.id !== userID) {
+    await button.reply.send(
+      'Only the user who started the vote can confirm or cancel.',
+      // @ts-expect-error
+      true
+    )
+
+    return
+  }
+
+  if (id === 'cancel') {
+    await button.reply.defer(true)
+
+    const confirmButton = new MessageButton()
+      .setLabel('Confirm')
+      .setID(`confirm/${userID}`)
+      .setStyle('green')
+      .setDisabled(true)
+
+    const cancelButton = new MessageButton()
+      .setLabel('Cancel')
+      .setID(`cancel/${userID}`)
+      .setStyle('red')
+      .setDisabled(true)
+
+    await button.message.edit('Vote Cancelled', {
+      buttons: [confirmButton, cancelButton],
+    })
+
+    await sleepMS(1000)
+    if (button.message.deletable) await button.message.delete()
+  }
 })
 
 exitHook(async (exit, error) => {
