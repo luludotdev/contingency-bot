@@ -3,7 +3,7 @@ import 'source-map-support/register.js'
 import { field } from '@lolpants/jogger'
 import buttons, { MessageButton } from 'discord-buttons'
 import { Client } from 'discord.js'
-import { GUILD_ID, TOKEN } from '~env/index.js'
+import { GUILD_ID, ROLE_WEIGHTS, TOKEN, VOTING_WEIGHT } from '~env/index.js'
 import type { HandlerParameters } from '~interactions/index.js'
 import { interactionID, parseInteractionID } from '~interactions/index.js'
 import { init__cancel } from '~interactions/init/cancel.js'
@@ -32,7 +32,13 @@ client.on('message', async message => {
   if (message.member === null) return
   if (message.guild.id !== GUILD_ID) return
 
-  // TODO: Role Checks
+  const roleTest = message.member.roles.cache
+    .map(role => ROLE_WEIGHTS.get(role.id))
+    .filter((weight): weight is number => typeof weight !== 'undefined')
+    .sort((a, b) => b - a)
+
+  if (roleTest.length === 0) return
+  if (roleTest[0] < VOTING_WEIGHT) return
 
   const prefix = 'c!startvote '
   if (!message.content.toLowerCase().startsWith(prefix)) return
