@@ -1,4 +1,4 @@
-import type { Handler } from '../index.js'
+import type { Handler } from '~interactions/index.js'
 import { cancelConfirmation, checkUserID } from './utils.js'
 
 export const init__cancel: Handler = async ({ button, components }) => {

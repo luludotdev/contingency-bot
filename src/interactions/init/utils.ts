@@ -1,7 +1,7 @@
 import { MessageButton } from 'discord-buttons'
 import type { MessageComponent } from 'discord-buttons'
-import { sleepMS } from '../../utils.js'
-import { interactionID } from '../index.js'
+import { interactionID } from '~interactions/index.js'
+import { sleepMS } from '~utils.js'
 
 export const checkUserID = async (button: MessageComponent, userID: string) => {
   if (button.clicker.id !== userID) {

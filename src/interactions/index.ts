@@ -1,5 +1,5 @@
 import type { MessageComponent } from 'discord-buttons'
-import type { Manager } from '../manager.js'
+import type { Manager } from '~manager.js'
 
 export const interactionID: (
   context: string,

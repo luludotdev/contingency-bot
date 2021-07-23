@@ -1,9 +1,9 @@
 import { field } from '@lolpants/jogger'
 import { MessageButton } from 'discord-buttons'
 import { MessageEmbed } from 'discord.js'
-import { logger } from '../../logger.js'
-import { interactionID } from '../index.js'
-import type { Handler } from '../index.js'
+import { interactionID } from '~interactions/index.js'
+import type { Handler } from '~interactions/index.js'
+import { logger } from '~logger.js'
 import { cancelConfirmation, checkUserID } from './utils.js'
 
 export const init__confirm: Handler = async ({

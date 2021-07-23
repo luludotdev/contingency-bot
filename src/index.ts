@@ -3,14 +3,17 @@ import 'source-map-support/register.js'
 import { field } from '@lolpants/jogger'
 import buttons, { MessageButton } from 'discord-buttons'
 import { Client } from 'discord.js'
-import { GUILD_ID, TOKEN } from './env/index.js'
+import { GUILD_ID, TOKEN } from '~env/index.js'
+import type { HandlerParameters } from '~interactions/index.js'
+import { interactionID, parseInteractionID } from '~interactions/index.js'
+import { init__cancel } from '~interactions/init/cancel.js'
+import { init__confirm } from '~interactions/init/confirm.js'
+import { vote__approve } from '~interactions/vote/approve.js'
+import { vote__cancel } from '~interactions/vote/cancel.js'
+import { vote__revoke } from '~interactions/vote/revoke.js'
+import { errorField, flush, logger } from '~logger.js'
+import { createManager } from '~manager.js'
 import { exitHook } from './exit.js'
-import { interactionID, parseInteractionID } from './interactions/index.js'
-import type { HandlerParameters } from './interactions/index.js'
-import { init__cancel } from './interactions/init/cancel.js'
-import { init__confirm } from './interactions/init/confirm.js'
-import { errorField, flush, logger } from './logger.js'
-import { createManager } from './manager.js'
 
 const client = new Client()
 const manager = createManager(client)
@@ -85,6 +88,18 @@ client.on('clickButton', async button => {
 
     case 'init@confirm':
       await init__confirm(parameters)
+      break
+
+    case 'vote@approve':
+      await vote__approve(parameters)
+      break
+
+    case 'vote@cancel':
+      await vote__cancel(parameters)
+      break
+
+    case 'vote@revoke':
+      await vote__revoke(parameters)
       break
 
     default: {
