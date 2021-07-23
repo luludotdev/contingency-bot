@@ -2,6 +2,7 @@ import { MessageButton } from 'discord-buttons'
 import type { MessageComponent } from 'discord-buttons'
 import { MessageEmbed } from 'discord.js'
 import type { ColorResolvable } from 'discord.js'
+import { Colours } from '~constants.js'
 import { interactionID } from '~interactions/index.js'
 import { sleepMS } from '~utils.js'
 
@@ -57,7 +58,7 @@ export const generateEmbed: (options: EmbedOptions) => MessageEmbed = ({
 }) => {
   const embed = new MessageEmbed()
     .setTitle('Emergency Vote')
-    .setColor(colour ?? 0xed_42_45)
+    .setColor(colour ?? Colours.RED)
     .setDescription(description)
 
   return embed
