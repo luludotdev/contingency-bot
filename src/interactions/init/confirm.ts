@@ -66,7 +66,8 @@ export const init__confirm: Handler = async ({
     .setStyle('red')
 
   const initiator = button.clicker.member
-  const embed = generateEmbed({ initiator, target })
+  const description = `${initiator} has started a vote to strip roles from ${target}.`
+  const embed = generateEmbed({ description })
 
   await manager.startVote(initiator, target)
   await button.message.channel.send({

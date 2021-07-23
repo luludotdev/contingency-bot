@@ -11,6 +11,9 @@ export interface Manager {
 
   isInitiator(member: GuildMember): boolean
   isTarget(member: GuildMember): boolean
+
+  get initiator(): GuildMember | null
+  get target(): GuildMember | null
 }
 
 interface Vote {
@@ -71,6 +74,16 @@ export const createManager: (client: Client) => Manager = client => {
     isTarget(member) {
       if (vote === null) throw new Error('no vote in progress')
       return member.id === vote.target.id
+    },
+
+    get initiator() {
+      if (vote === null) return null
+      return vote.initiator
+    },
+
+    get target() {
+      if (vote === null) return null
+      return vote.target
     },
   }
 }
