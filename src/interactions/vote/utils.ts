@@ -5,9 +5,10 @@ import { interactionID } from '~interactions/index.js'
 
 export const cancelVote = async (
   button: MessageComponent,
-  embed: MessageEmbed
+  embed: MessageEmbed,
+  defer = true
 ) => {
-  await button.reply.defer(true)
+  if (defer) await button.reply.defer(true)
 
   const approveButton = new MessageButton()
     .setLabel('Approve')

@@ -42,7 +42,13 @@ export const vote__approve: Handler = async ({ manager, button }) => {
   const embed = button.message.embeds[0]
   embed.fields[0].value = vote.voters
 
-  await button.message.edit({ embed })
+  if (vote.isMet) {
+    embed.description = `~~${embed.description}~~\nVote passed.`
+    embed.color = Colours.GREEN
 
-  // TODO: Check when a vote threshold has been met
+    manager.cancelVote()
+    await cancelVote(button, embed, false)
+  } else {
+    await button.message.edit({ embed })
+  }
 }
