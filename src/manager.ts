@@ -9,7 +9,9 @@ export interface Manager {
   voteWeight(member: GuildMember): number
   canInitiate(member: GuildMember): boolean
   canVote(member: GuildMember): boolean
+
   castVote(member: GuildMember): Vote
+  hasVoted(member: GuildMember): boolean
 
   isInitiator(member: GuildMember): boolean
   isTarget(member: GuildMember): boolean
@@ -100,6 +102,11 @@ export const createManager: () => Manager = () => {
     },
 
     castVote(member) {
+      // TODO
+      throw new Error('Not Implemented')
+    },
+
+    hasVoted(member) {
       // TODO
       throw new Error('Not Implemented')
     },
