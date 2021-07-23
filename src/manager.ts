@@ -1,5 +1,5 @@
 import type { GuildMember } from 'discord.js'
-import { ROLE_WEIGHTS, VOTING_WEIGHT } from '~env/index.js'
+import { ROLE_WEIGHTS, TARGET_SCORE, VOTING_WEIGHT } from '~env/index.js'
 
 export interface Manager {
   startVote(initiator: GuildMember, target: GuildMember): Vote
@@ -29,6 +29,8 @@ interface Vote {
   votes: Map<GuildMember['id'], [member: GuildMember, weight: number]>
   get score(): number
   get voters(): string
+
+  get isMet(): boolean
 }
 
 export const createManager: () => Manager = () => {
@@ -70,6 +72,10 @@ export const createManager: () => Manager = () => {
           return values
             .map(([member, weight]) => `• ${member} (${weight})`)
             .join('\n')
+        },
+
+        get isMet() {
+          return this.score >= TARGET_SCORE
         },
       }
 
