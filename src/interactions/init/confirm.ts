@@ -43,11 +43,6 @@ export const init__confirm: Handler = async ({
     return
   }
 
-  if (manager.voteInProgress()) {
-    await cancelConfirmation(button, 'A vote is already in progress.')
-    return
-  }
-
   await button.reply.defer(true)
   await button.message.delete()
 
@@ -77,20 +72,23 @@ export const init__confirm: Handler = async ({
     await role.setMentionable(true)
   }
 
-  const initiator = button.clicker.member
-  const vote = manager.startVote(initiator, target)
-
-  const description = `${initiator} has started a vote to strip roles from ${target}`
-  const embed = generateEmbed({ description, votes: vote.voters })
-
   const rolesString = roles.map(role => role.toString()).join(' ')
-  await button.message.channel.send(rolesString, {
-    embed,
-    buttons: [approveButton, revokeButton, cancelButton],
-  })
+  const message = await button.message.channel.send(rolesString)
 
   for (const role of notMentionable) {
     // eslint-disable-next-line no-await-in-loop
     await role.setMentionable(false)
   }
+
+  const initiator = button.clicker.member
+  const vote = manager.startVote(message, initiator, target)
+
+  const description = `${initiator} has started a vote to strip roles from ${target}`
+  const embed = generateEmbed({ description, votes: vote.voterList })
+
+  await message.edit({
+    embed,
+    // @ts-expect-error
+    buttons: [approveButton, revokeButton, cancelButton],
+  })
 }

@@ -50,6 +50,15 @@ client.on('message', async message => {
     return
   }
 
+  const inProgress = manager.voteInProgress(target)
+  if (inProgress !== undefined) {
+    await message.reply(
+      `A vote against that user is already in progress!\n${inProgress.messageURL}`
+    )
+
+    return
+  }
+
   const confirmButton = new MessageButton()
     .setLabel('Confirm')
     .setID(interactionID('init', 'confirm', message.author.id, target.id))
