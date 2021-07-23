@@ -41,7 +41,9 @@ export const createManager: () => Manager = () => {
         initiator,
         target,
 
-        votes: new Map(),
+        votes: new Map([
+          [initiator.id, [initiator, this.voteWeight(initiator)]],
+        ]),
         get score() {
           const score = [...this.votes.values()]
             .map(([_, weight]) => weight)
