@@ -9,5 +9,22 @@ export const vote__cancel: Handler = async ({ manager, button }) => {
     embed.setColor(Colours.GREY)
 
     await cancelVote(button, embed)
+    return
   }
+
+  if (!manager.isInitiator(button.clicker.member)) {
+    await button.reply.send(
+      'Only the user who started the vote can cancel.',
+      // @ts-expect-error
+      true
+    )
+
+    return
+  }
+
+  const embed = button.message.embeds[0]
+  embed.setDescription(`~~${embed.description}~~\n**This vote was cancelled.**`)
+  embed.setColor(Colours.GREY)
+
+  await cancelVote(button, embed)
 }
