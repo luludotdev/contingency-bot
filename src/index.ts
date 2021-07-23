@@ -44,7 +44,7 @@ client.on('message', async message => {
 
   const confirmButton = new MessageButton()
     .setLabel('Confirm')
-    .setID(`confirm/${message.author.id}`)
+    .setID(`confirm/${message.author.id}/${target.user.id}`)
     .setStyle('green')
 
   const cancelButton = new MessageButton()
@@ -61,9 +61,10 @@ client.on('message', async message => {
 })
 
 client.on('clickButton', async button => {
-  const [id, userID] = button.id.split('/')
+  const [id, userID, targetID] = button.id.split('/')
   if (!id || !userID) return
 
+  await button.clicker.fetch()
   if (button.clicker.id !== userID) {
     await button.reply.send(
       'Only the user who started the vote can confirm or cancel.',
@@ -95,6 +96,15 @@ client.on('clickButton', async button => {
 
     await sleepMS(1000)
     if (button.message.deletable) await button.message.delete()
+  } else if (id === 'confirm') {
+    if (!targetID) return
+    const initiator = button.clicker.member
+
+    const target = button.guild.member(targetID)
+    if (!target) return
+
+    // TODO: Start Vote
+    console.log({ initiator: initiator.user.tag, target: target.user.tag })
   }
 })
 
