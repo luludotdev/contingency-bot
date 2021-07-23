@@ -5,9 +5,15 @@ import buttons, { MessageButton } from 'discord-buttons'
 import { Client } from 'discord.js'
 import { GUILD_ID, TOKEN } from './env/index.js'
 import { exitHook } from './exit.js'
+import { interactionID, parseInteractionID } from './interactions/index.js'
+import type { HandlerParameters } from './interactions/index.js'
+import { init__cancel } from './interactions/init/cancel.js'
+import { init__confirm } from './interactions/init/confirm.js'
 import { errorField, flush, logger } from './logger.js'
+import { createManager } from './manager.js'
 
 const client = new Client()
+const manager = createManager(client)
 buttons(client)
 
 client.on('ready', () => {
@@ -44,12 +50,12 @@ client.on('message', async message => {
 
   const confirmButton = new MessageButton()
     .setLabel('Confirm')
-    .setID(`confirm/${message.author.id}/${target.user.id}`)
+    .setID(interactionID('init', 'confirm', message.author.id, target.id))
     .setStyle('green')
 
   const cancelButton = new MessageButton()
     .setLabel('Cancel')
-    .setID(`cancel/${message.author.id}`)
+    .setID(interactionID('init', 'cancel', message.author.id))
     .setStyle('red')
 
   await message.channel.send(
@@ -61,50 +67,35 @@ client.on('message', async message => {
 })
 
 client.on('clickButton', async button => {
-  const [id, userID, targetID] = button.id.split('/')
-  if (!id || !userID) return
+  const interaction = parseInteractionID(button.id)
+  const { key, components } = interaction
 
   await button.clicker.fetch()
-  if (button.clicker.id !== userID) {
-    await button.reply.send(
-      'Only the user who started the vote can confirm or cancel.',
-      // @ts-expect-error
-      true
-    )
-
-    return
+  const parameters: HandlerParameters = {
+    button,
+    manager,
+    key,
+    components,
   }
 
-  if (id === 'cancel') {
-    await button.reply.defer(true)
+  switch (key) {
+    case 'init@cancel':
+      await init__cancel(parameters)
+      break
 
-    const confirmButton = new MessageButton()
-      .setLabel('Confirm')
-      .setID(`confirm/${userID}`)
-      .setStyle('green')
-      .setDisabled(true)
+    case 'init@confirm':
+      await init__confirm(parameters)
+      break
 
-    const cancelButton = new MessageButton()
-      .setLabel('Cancel')
-      .setID(`cancel/${userID}`)
-      .setStyle('red')
-      .setDisabled(true)
+    default: {
+      logger.error(
+        field('event', 'clickButton'),
+        field('interaction', interaction.key),
+        field('error', 'unhandled interaction')
+      )
 
-    await button.message.edit('Vote Cancelled', {
-      buttons: [confirmButton, cancelButton],
-    })
-
-    await sleepMS(1000)
-    if (button.message.deletable) await button.message.delete()
-  } else if (id === 'confirm') {
-    if (!targetID) return
-    const initiator = button.clicker.member
-
-    const target = button.guild.member(targetID)
-    if (!target) return
-
-    // TODO: Start Vote
-    console.log({ initiator: initiator.user.tag, target: target.user.tag })
+      break
+    }
   }
 })
 
