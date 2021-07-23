@@ -19,11 +19,16 @@ const manager = createManager()
 const client = new Client()
 buttons(client)
 
-client.on('ready', () => {
+client.on('ready', async () => {
   logger.info(
     field('action', 'ready'),
     field('user', client.user?.tag ?? 'Unknown')
   )
+
+  const guild = await client.guilds.fetch(GUILD_ID)
+  const members = await guild.members.fetch({ limit: 500_000 })
+
+  logger.info(field('action', 'sync-members'), field('members', members.size))
 })
 
 client.on('message', async message => {
