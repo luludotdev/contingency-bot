@@ -107,8 +107,8 @@ export const createManager: () => Manager = () => {
     },
 
     hasVoted(member) {
-      // TODO
-      throw new Error('Not Implemented')
+      if (vote === null) throw new Error('no vote in progress')
+      return vote.votes.has(member.id)
     },
 
     isInitiator(member) {
