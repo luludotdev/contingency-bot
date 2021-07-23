@@ -1,4 +1,4 @@
-import type { Client, GuildMember } from 'discord.js'
+import type { GuildMember } from 'discord.js'
 
 export interface Manager {
   startVote(initiator: GuildMember, target: GuildMember): Promise<void>
@@ -22,7 +22,7 @@ interface Vote {
   target: GuildMember
 }
 
-export const createManager: (client: Client) => Manager = client => {
+export const createManager: () => Manager = () => {
   let vote: Vote | null = null
 
   return {

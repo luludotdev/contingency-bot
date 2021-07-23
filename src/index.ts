@@ -15,8 +15,8 @@ import { errorField, flush, logger } from '~logger.js'
 import { createManager } from '~manager.js'
 import { exitHook } from './exit.js'
 
+const manager = createManager()
 const client = new Client()
-const manager = createManager(client)
 buttons(client)
 
 client.on('ready', () => {
