@@ -1,12 +1,15 @@
 import 'source-map-support/register.js'
 
 import { field } from '@lolpants/jogger'
+import buttons from 'discord-buttons'
 import { Client } from 'discord.js'
 import { TOKEN } from './env/index.js'
 import { exitHook } from './exit.js'
 import { errorField, flush, logger } from './logger.js'
 
 const client = new Client()
+buttons(client)
+
 client.on('ready', () => {
   logger.info(
     field('action', 'ready'),
