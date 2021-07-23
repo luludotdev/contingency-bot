@@ -37,6 +37,11 @@ client.on('message', async message => {
     return
   }
 
+  if (target.id === message.author.id) {
+    await message.reply('You cannot start a vote against yourself!')
+    return
+  }
+
   const confirmButton = new MessageButton()
     .setLabel('Confirm')
     .setID(`confirm/${message.author.id}`)
@@ -47,9 +52,12 @@ client.on('message', async message => {
     .setID(`cancel/${message.author.id}`)
     .setStyle('red')
 
-  await message.channel.send('Are you sure you want to start a vote?', {
-    buttons: [confirmButton, cancelButton],
-  })
+  await message.channel.send(
+    `Are you sure you want to start a vote against \`${target.user.tag}\`?`,
+    {
+      buttons: [confirmButton, cancelButton],
+    }
+  )
 })
 
 client.on('clickButton', async button => {
