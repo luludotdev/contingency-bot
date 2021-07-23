@@ -57,6 +57,8 @@ export const createManager: () => Manager = () => {
         },
         get voters() {
           const values = [...this.votes.values()]
+          if (values.length === 0) return '*No votes yet.*'
+
           values.sort(([member_a, weight_a], [member_b, weight_b]) =>
             weight_a > weight_b
               ? -1
