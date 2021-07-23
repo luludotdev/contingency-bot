@@ -1,5 +1,6 @@
 import { field } from '@lolpants/jogger'
 import { MessageButton } from 'discord-buttons'
+import { MessageEmbed } from 'discord.js'
 import { logger } from '../../logger.js'
 import { interactionID } from '../index.js'
 import type { Handler } from '../index.js'
@@ -59,10 +60,17 @@ export const init__confirm: Handler = async ({
     .setID(interactionID('vote', 'cancel', userID))
     .setStyle('red')
 
-  await button.message.channel.send('Vote', {
+  const initiator = button.clicker.member
+  const embed = new MessageEmbed()
+    .setTitle('Emergency Vote')
+    .setColor(0xed_42_45)
+    .setDescription(
+      `${initiator} has started a vote to strip roles from ${target}.`
+    )
+
+  await manager.startVote(initiator, target)
+  await button.message.channel.send({
+    embed,
     buttons: [approveButton, cancelButton],
   })
-
-  const initiator = button.clicker.member
-  await manager.startVote(initiator, target)
 }
