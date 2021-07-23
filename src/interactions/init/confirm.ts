@@ -66,10 +66,6 @@ export const init__confirm: Handler = async ({
     .setID(interactionID('vote', 'cancel', userID))
     .setStyle('red')
 
-  const initiator = button.clicker.member
-  const description = `${initiator} has started a vote to strip roles from ${target}.`
-  const embed = generateEmbed({ description })
-
   const roles = [...ROLE_WEIGHTS.keys()]
     .map(id => button.guild.roles.resolve(id))
     .filter((role): role is Role => role !== null)
@@ -81,7 +77,11 @@ export const init__confirm: Handler = async ({
     await role.setMentionable(true)
   }
 
-  await manager.startVote(initiator, target)
+  const initiator = button.clicker.member
+  const vote = manager.startVote(initiator, target)
+
+  const description = `${initiator} has started a vote to strip roles from ${target}.`
+  const embed = generateEmbed({ description, votes: vote.voters })
 
   const rolesString = roles.map(role => role.toString()).join(' ')
   await button.message.channel.send(rolesString, {

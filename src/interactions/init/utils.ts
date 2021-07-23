@@ -50,16 +50,19 @@ export const cancelConfirmation = async (
 interface EmbedOptions {
   description: string
   colour?: ColorResolvable
+  votes: string
 }
 
 export const generateEmbed: (options: EmbedOptions) => MessageEmbed = ({
   description,
   colour,
+  votes,
 }) => {
   const embed = new MessageEmbed()
     .setTitle('Emergency Vote')
     .setColor(colour ?? Colours.RED)
     .setDescription(description)
+    .addField('Votes', votes)
 
   return embed
 }

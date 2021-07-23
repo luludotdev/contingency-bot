@@ -25,6 +25,7 @@ interface Vote {
 
   votes: Map<GuildMember['id'], [member: GuildMember, weight: number]>
   get score(): number
+  get voters(): string
 }
 
 export const createManager: () => Manager = () => {
@@ -50,6 +51,11 @@ export const createManager: () => Manager = () => {
             .reduce((acc, weight) => acc + weight, 0)
 
           return score
+        },
+        get voters() {
+          return [...this.votes.values()]
+            .map(([member, weight]) => `• ${member} (${weight})`)
+            .join('\n')
         },
       }
 
