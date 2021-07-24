@@ -52,6 +52,8 @@ export const vote__approve: Handler = async ({ manager, button }) => {
 
     vote.cancel(null)
     await cancelVote(button, embed, false)
+
+    // TODO: Perform moderation action
   } else {
     await button.message.edit({ embed })
   }
