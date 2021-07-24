@@ -128,8 +128,28 @@ client.on('clickButton', async button => {
   }
 })
 
+const interval = setInterval(() => {
+  // Wait for client to be ready
+  if (client.readyAt === null) return
+
+  const expired = manager.getExpired()
+  if (expired.length === 0) return
+
+  logger.info(
+    field('action', 'sweep-expired'),
+    field('expired-count', expired.length)
+  )
+
+  for (const vote of expired) {
+    // TODO: Edit vote message
+    vote.cancel(null)
+  }
+}, 1000 * 60)
+
 exitHook(async (exit, error) => {
+  clearInterval(interval)
   client.destroy()
+
   if (error) {
     logger.error(errorField(error))
   } else {
