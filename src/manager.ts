@@ -9,6 +9,7 @@ import {
 export interface Manager {
   startVote(message: Message, initiator: GuildMember, target: GuildMember): Vote
   cancelVote(messageID: string): boolean
+  replaceVote(oldMessageID: string, newMessageID: string): void
 
   getVote(messageID: string): Vote | undefined
   voteInProgress(target: GuildMember): Vote | undefined
@@ -39,6 +40,7 @@ export interface Vote {
   canVote(member: GuildMember): boolean
 
   cancel(member: GuildMember | null): void
+  replaceMessage(newMessage: Message): void
 }
 
 export const createManager: () => Manager = () => {
@@ -59,6 +61,14 @@ export const createManager: () => Manager = () => {
 
     cancelVote(messageID) {
       return votes.delete(messageID)
+    },
+
+    replaceVote(oldMessageID, newMessageID) {
+      const vote = votes.get(oldMessageID)
+      if (vote === undefined) return
+
+      votes.set(newMessageID, vote)
+      votes.delete(oldMessageID)
     },
 
     getVote(messageID) {
@@ -99,7 +109,8 @@ const createVote: (
   manager: Manager
 ) => Vote = (_message, _initiator, _target, _manager) => {
   const startedAt = new Date()
-  const message = _message
+  let message = _message
+
   const initiator = _initiator
   const target = _target
   const manager = _manager
@@ -195,6 +206,13 @@ const createVote: (
       if (member && !this.isInitiator(member)) throw new Error('not allowed')
 
       manager.cancelVote(this.message.id)
+    },
+
+    replaceMessage(newMessage) {
+      const oldID = message.id
+      message = newMessage
+
+      manager.replaceVote(oldID, newMessage.id)
     },
     // #endregion
   }

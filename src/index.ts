@@ -10,7 +10,7 @@ import type { HandlerParameters } from '~interactions/index.js'
 import { parseInteractionID } from '~interactions/index.js'
 import { init__cancel } from '~interactions/init/cancel.js'
 import { init__confirm } from '~interactions/init/confirm.js'
-import { generateInitButtons } from '~interactions/init/utils.js'
+import { generateEmbed, generateInitButtons } from '~interactions/init/utils.js'
 import { vote__approve } from '~interactions/vote/approve.js'
 import { vote__cancel } from '~interactions/vote/cancel.js'
 import { vote__revoke } from '~interactions/vote/revoke.js'
@@ -121,6 +121,29 @@ client.on('clickButton', async button => {
       break
     }
   }
+})
+
+client.on('messageDelete', async message => {
+  const vote = manager.getVote(message.id)
+  if (vote === undefined) return
+
+  const description = `${vote.initiator} has started a vote to strip roles from ${vote.target}`
+  const embed = generateEmbed({
+    description,
+    progress: vote.progress,
+    votes: vote.voterList,
+  })
+
+  const buttons = generateVoteButtons({ cancelData: [vote.initiator.id] })
+  const newMessage = await message.channel.send({ embed, buttons })
+
+  vote.replaceMessage(newMessage)
+  logger.info(
+    field('context', 'vote'),
+    field('action', 'message-replaced'),
+    field('oldID', message.id),
+    field('newID', newMessage.id)
+  )
 })
 
 const interval = setInterval(async () => {
