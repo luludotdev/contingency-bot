@@ -47,7 +47,7 @@ export const vote__approve: Handler = async ({ manager, button }) => {
   embed.fields[1].value = vote.voterList
 
   if (vote.isMet) {
-    embed.description = `~~${embed.description}~~\nVote passed.`
+    embed.description = `~~${embed.description}~~\n**Vote passed.**`
     embed.color = Colours.GREEN
 
     vote.cancel(null)
