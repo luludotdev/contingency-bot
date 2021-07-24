@@ -4,6 +4,7 @@ import 'discord-reply'
 import { field } from '@lolpants/jogger'
 import buttons, { MessageButton } from 'discord-buttons'
 import { Client, Intents } from 'discord.js'
+import { Colours } from '~constants.js'
 import { GUILD_ID, TOKEN } from '~env/index.js'
 import type { HandlerParameters } from '~interactions/index.js'
 import { interactionID, parseInteractionID } from '~interactions/index.js'
@@ -128,7 +129,7 @@ client.on('clickButton', async button => {
   }
 })
 
-const interval = setInterval(() => {
+const interval = setInterval(async () => {
   // Wait for client to be ready
   if (client.readyAt === null) return
 
@@ -141,7 +142,35 @@ const interval = setInterval(() => {
   )
 
   for (const vote of expired) {
-    // TODO: Edit vote message
+    const embed = vote.message.embeds[0]
+    embed.setDescription(`~~${embed.description}~~\n**This vote has expired.**`)
+    embed.setColor(Colours.GREY)
+
+    const approveButton = new MessageButton()
+      .setLabel('Approve')
+      .setID(interactionID('dummy', 'approve'))
+      .setStyle('blurple')
+      .setDisabled(true)
+
+    const revokeButton = new MessageButton()
+      .setLabel('Revoke Approval')
+      .setID(interactionID('dummy', 'revoke'))
+      .setStyle('gray')
+      .setDisabled(true)
+
+    const cancelButton = new MessageButton()
+      .setLabel('Cancel')
+      .setID(interactionID('dummy', 'cancel'))
+      .setStyle('red')
+      .setDisabled(true)
+
+    // eslint-disable-next-line no-await-in-loop
+    await vote.message.edit({
+      embed,
+      // @ts-expect-error
+      buttons: [approveButton, revokeButton, cancelButton],
+    })
+
     vote.cancel(null)
   }
 }, 1000 * 60)
