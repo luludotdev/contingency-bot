@@ -74,7 +74,11 @@ export const vote__approve: Handler = async ({ manager, button }) => {
       vote.target.roles.cache,
       `Emergency vote called by ${vote.initiator.user.tag}`
     )
-  } else {
-    await button.message.edit({ embed })
+
+    embed.setDescription(
+      `${embed.description}\n\nAll roles removed from ${vote.target} successfully!`
+    )
   }
+
+  await button.message.edit({ embed })
 }
