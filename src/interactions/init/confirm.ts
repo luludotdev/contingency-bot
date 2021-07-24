@@ -84,7 +84,11 @@ export const init__confirm: Handler = async ({
   const vote = manager.startVote(message, initiator, target)
 
   const description = `${initiator} has started a vote to strip roles from ${target}`
-  const embed = generateEmbed({ description, votes: vote.voterList })
+  const embed = generateEmbed({
+    description,
+    progress: vote.progress,
+    votes: vote.voterList,
+  })
 
   await message.edit({
     embed,

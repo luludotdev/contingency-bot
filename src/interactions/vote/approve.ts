@@ -43,7 +43,8 @@ export const vote__approve: Handler = async ({ manager, button }) => {
   vote.approve(button.clicker.member)
 
   const embed = button.message.embeds[0]
-  embed.fields[0].value = vote.voterList
+  embed.fields[0].value = vote.progress
+  embed.fields[1].value = vote.voterList
 
   if (vote.isMet) {
     embed.description = `~~${embed.description}~~\nVote passed.`

@@ -38,7 +38,8 @@ export const vote__revoke: Handler = async ({ manager, button }) => {
   vote.revoke(button.clicker.member)
 
   const embed = button.message.embeds[0]
-  embed.fields[0].value = vote.voterList
+  embed.fields[0].value = vote.progress
+  embed.fields[1].value = vote.voterList
 
   await button.message.edit({ embed })
 }

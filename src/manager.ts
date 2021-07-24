@@ -28,6 +28,7 @@ export interface Vote {
   get isMet(): boolean
 
   get voterList(): string
+  get progress(): string
 
   approve(member: GuildMember): void
   revoke(member: GuildMember): void
@@ -152,6 +153,11 @@ const createVote: (
       return values
         .map(([member, weight]) => `• ${member} (${weight})`)
         .join('\n')
+    },
+
+    get progress() {
+      const percentage = ((this.score / TARGET_SCORE) * 100).toFixed(0)
+      return `${this.score} / ${TARGET_SCORE} (${percentage}%)`
     },
     // #endregion
 
