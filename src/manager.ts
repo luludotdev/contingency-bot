@@ -1,11 +1,6 @@
 import type { GuildMember, Message } from 'discord.js'
-import {
-  MAX_VOTE_LIFETIME,
-  ROLE_WEIGHTS,
-  TARGET_SCORE,
-  VOTING_WEIGHT,
-} from '~env/index.js'
-import { sortMembersByWeight } from '~utils.js'
+import { MAX_VOTE_LIFETIME, TARGET_SCORE, VOTING_WEIGHT } from '~env/index.js'
+import { generateMentions, sortMembersByWeight, voteWeight } from '~utils.js'
 
 export interface Manager {
   startVote(message: Message, initiator: GuildMember, target: GuildMember): Vote
@@ -171,26 +166,7 @@ const createVote: (
       const guild = message.guild
       if (guild === null) throw new Error('guild is null')
 
-      const members: GuildMember[] = []
-      for (const roleID of ROLE_WEIGHTS.keys()) {
-        const role = guild.roles.resolve(roleID)
-        if (role === null) {
-          throw new Error(`failed to resolve role: \`${roleID}\``)
-        }
-
-        for (const member of role.members.values()) {
-          if (!members.includes(member)) {
-            members.push(member)
-          }
-        }
-      }
-
-      const values: Array<[member: GuildMember, weight: number]> = members
-        .filter(member => member.id !== target.id)
-        .map(member => [member, voteWeight(member)])
-
-      values.sort(sortMembersByWeight)
-      return values.map(([member]) => member.toString())
+      return generateMentions(guild.roles, target)
     },
     // #endregion
 
@@ -238,13 +214,4 @@ const createVote: (
     },
     // #endregion
   }
-}
-
-const voteWeight: (member: GuildMember) => number = member => {
-  const roleTest = member.roles.cache
-    .map(role => ROLE_WEIGHTS.get(role.id))
-    .filter((weight): weight is number => typeof weight !== 'undefined')
-
-  if (roleTest.length === 0) return 0
-  return Math.max(...roleTest)
 }
