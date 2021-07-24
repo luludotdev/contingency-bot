@@ -5,6 +5,7 @@ import {
   TARGET_SCORE,
   VOTING_WEIGHT,
 } from '~env/index.js'
+import { sortMembersByWeight } from '~utils.js'
 
 export interface Manager {
   startVote(message: Message, initiator: GuildMember, target: GuildMember): Vote
@@ -155,14 +156,7 @@ const createVote: (
       const values = [...votes.values()]
       if (values.length === 0) return '*No votes yet.*'
 
-      values.sort(([member_a, weight_a], [member_b, weight_b]) =>
-        weight_a > weight_b
-          ? -1
-          : weight_a < weight_b
-          ? 1
-          : member_a.user.username.localeCompare(member_b.user.username)
-      )
-
+      values.sort(sortMembersByWeight)
       return values
         .map(([member, weight]) => `• ${member} (${weight})`)
         .join('\n')
@@ -191,19 +185,12 @@ const createVote: (
         }
       }
 
-      const mapped: Array<[member: GuildMember, weight: number]> = members
+      const values: Array<[member: GuildMember, weight: number]> = members
         .filter(member => member.id !== target.id)
         .map(member => [member, voteWeight(member)])
 
-      const sorted = mapped.sort(([member_a, weight_a], [member_b, weight_b]) =>
-        weight_a > weight_b
-          ? -1
-          : weight_a < weight_b
-          ? 1
-          : member_a.user.username.localeCompare(member_b.user.username)
-      )
-
-      return sorted.map(([member]) => member.toString())
+      values.sort(sortMembersByWeight)
+      return values.map(([member]) => member.toString())
     },
     // #endregion
 
