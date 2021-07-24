@@ -47,18 +47,18 @@ client.on('message', async message => {
 
   const target = message.guild.member(targetID)
   if (target === null) {
-    await message.reply('Could not resolve a user with that ID!')
+    await message.lineReply('Could not resolve a user with that ID!')
     return
   }
 
   if (target.id === message.author.id) {
-    await message.reply('You cannot start a vote against yourself!')
+    await message.lineReply('You cannot start a vote against yourself!')
     return
   }
 
   const inProgress = manager.voteInProgress(target)
   if (inProgress !== undefined) {
-    await message.reply(
+    await message.lineReply(
       `A vote against that user is already in progress!\n${inProgress.messageURL}`
     )
 
