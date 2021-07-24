@@ -158,8 +158,10 @@ const createVote: (
     },
 
     get progress() {
-      const percentage = ((this.score / TARGET_SCORE) * 100).toFixed(0)
-      return `${this.score} / ${TARGET_SCORE} (${percentage}%)`
+      const percentage = Math.min(this.score / TARGET_SCORE, 1)
+      const percentString = (percentage * 100).toFixed(0)
+
+      return `${this.score} / ${TARGET_SCORE} (${percentString}%)`
     },
 
     get mentions() {
