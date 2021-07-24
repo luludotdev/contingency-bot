@@ -18,8 +18,7 @@ export interface Manager {
 }
 
 export interface Vote {
-  get messageID(): string
-  get messageURL(): string
+  get message(): Message
   get startedAt(): Date
 
   get initiator(): GuildMember
@@ -110,12 +109,8 @@ const createVote: (
 
   return {
     // #region Getters
-    get messageID() {
-      return message.id
-    },
-
-    get messageURL() {
-      return message.url
+    get message() {
+      return message
     },
 
     get startedAt() {
@@ -192,7 +187,8 @@ const createVote: (
 
     cancel(member) {
       if (member && !this.isInitiator(member)) throw new Error('not allowed')
-      manager.cancelVote(this.messageID)
+
+      manager.cancelVote(this.message.id)
     },
     // #endregion
   }

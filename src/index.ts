@@ -59,7 +59,7 @@ client.on('message', async message => {
   const inProgress = manager.voteInProgress(target)
   if (inProgress !== undefined) {
     await message.lineReply(
-      `A vote against that user is already in progress!\n${inProgress.messageURL}`
+      `A vote against that user is already in progress!\n${inProgress.message.url}`
     )
 
     return
