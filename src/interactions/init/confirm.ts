@@ -78,6 +78,25 @@ export const init__confirm: Handler = async ({
   const initiator = button.clicker.member
   const vote = manager.startVote(message, initiator, target)
 
+  logger.info(
+    field('context', 'vote'),
+    field('action', 'start'),
+    field('id', vote.message.id),
+    field('initiator', initiator.user.tag),
+    field('initiatorID', initiator.id),
+    field('target', target.user.tag),
+    field('targetID', target.id)
+  )
+
+  logger.info(
+    field('context', 'vote'),
+    field('action', 'approve'),
+    field('id', vote.message.id),
+    field('user', button.clicker.member.user.tag),
+    field('userID', button.clicker.member.id),
+    field('progress', vote.progress)
+  )
+
   const description = `${initiator} has started a vote to strip roles from ${target}`
   const embed = generateEmbed({
     description,

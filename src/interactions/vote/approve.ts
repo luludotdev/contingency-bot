@@ -1,5 +1,7 @@
+import { field } from '@lolpants/jogger'
 import { Colours, Reply, VoteResult } from '~constants.js'
 import type { Handler } from '~interactions/index.js'
+import { logger } from '~logger.js'
 import { cancelVote } from './utils.js'
 
 export const vote__approve: Handler = async ({ manager, button }) => {
@@ -42,6 +44,15 @@ export const vote__approve: Handler = async ({ manager, button }) => {
   await button.reply.defer(true)
   vote.approve(button.clicker.member)
 
+  logger.info(
+    field('context', 'vote'),
+    field('action', 'approve'),
+    field('id', vote.message.id),
+    field('user', button.clicker.member.user.tag),
+    field('userID', button.clicker.member.id),
+    field('progress', vote.progress)
+  )
+
   const embed = button.message.embeds[0]
   embed.fields[0].value = vote.progress
   embed.fields[1].value = vote.voterList
@@ -52,6 +63,12 @@ export const vote__approve: Handler = async ({ manager, button }) => {
 
     vote.cancel(null)
     await cancelVote(button, embed, false)
+
+    logger.info(
+      field('context', 'vote'),
+      field('action', 'passed'),
+      field('id', vote.message.id)
+    )
 
     // TODO: Perform moderation action
   } else {

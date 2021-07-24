@@ -1,5 +1,7 @@
+import { field } from '@lolpants/jogger'
 import { Colours, VoteResult } from '~constants.js'
 import type { Handler } from '~interactions/index.js'
+import { logger } from '~logger.js'
 import { cancelVote } from './utils.js'
 
 export const vote__cancel: Handler = async ({ manager, button }) => {
@@ -31,4 +33,10 @@ export const vote__cancel: Handler = async ({ manager, button }) => {
 
   vote.cancel(button.clicker.member)
   await cancelVote(button, embed)
+
+  logger.info(
+    field('context', 'vote'),
+    field('action', 'cancel'),
+    field('id', vote.message.id)
+  )
 }

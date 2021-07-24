@@ -171,6 +171,11 @@ const interval = setInterval(async () => {
     })
 
     vote.cancel(null)
+    logger.info(
+      field('context', 'vote'),
+      field('action', 'expired'),
+      field('id', vote.message.id)
+    )
   }
 }, 1000 * 60)
 
