@@ -1,3 +1,4 @@
+import ms from 'ms'
 import { registerInt, registerString } from './register.js'
 
 // #region Globals
@@ -39,4 +40,14 @@ export { weightMap as ROLE_WEIGHTS }
 
 export const VOTING_WEIGHT = registerInt('VOTING_WEIGHT', true)
 export const TARGET_SCORE = registerInt('TARGET_SCORE', true)
+// #endregion
+
+// #region Vote Lifetimes
+const maxVoteLifetime = registerString('MAX_VOTE_LIFETIME') ?? '60m'
+const voteLifeMS = ms(maxVoteLifetime)
+if (voteLifeMS === undefined) {
+  throw new TypeError(`lifetime \`${maxVoteLifetime}\` is invalid!`)
+}
+
+export { voteLifeMS as MAX_VOTE_LIFETIME }
 // #endregion
