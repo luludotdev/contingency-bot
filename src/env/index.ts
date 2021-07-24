@@ -49,5 +49,11 @@ if (voteLifeMS === undefined) {
   throw new TypeError(`lifetime \`${maxVoteLifetime}\` is invalid!`)
 }
 
+if (voteLifeMS < ms('5m')) {
+  throw new RangeError(
+    `vote lifetime \`${maxVoteLifetime}\` must be greater than 5m`
+  )
+}
+
 export { voteLifeMS as MAX_VOTE_LIFETIME }
 // #endregion
