@@ -1,4 +1,5 @@
 import 'source-map-support/register.js'
+import 'discord-reply'
 
 import { field } from '@lolpants/jogger'
 import buttons, { MessageButton } from 'discord-buttons'
