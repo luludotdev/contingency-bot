@@ -31,6 +31,8 @@ export interface Vote {
   get voterList(): string
   get progress(): string
 
+  get mentions(): string[]
+
   approve(member: GuildMember): void
   revoke(member: GuildMember): void
   hasVoted(member: GuildMember): boolean
@@ -169,6 +171,39 @@ const createVote: (
     get progress() {
       const percentage = ((this.score / TARGET_SCORE) * 100).toFixed(0)
       return `${this.score} / ${TARGET_SCORE} (${percentage}%)`
+    },
+
+    get mentions() {
+      const guild = message.guild
+      if (guild === null) throw new Error('guild is null')
+
+      const members: GuildMember[] = []
+      for (const roleID of ROLE_WEIGHTS.keys()) {
+        const role = guild.roles.resolve(roleID)
+        if (role === null) {
+          throw new Error(`failed to resolve role: \`${roleID}\``)
+        }
+
+        for (const member of role.members.values()) {
+          if (!members.includes(member)) {
+            members.push(member)
+          }
+        }
+      }
+
+      const mapped: Array<[member: GuildMember, weight: number]> = members
+        .filter(member => member.id !== target.id)
+        .map(member => [member, voteWeight(member)])
+
+      const sorted = mapped.sort(([member_a, weight_a], [member_b, weight_b]) =>
+        weight_a > weight_b
+          ? -1
+          : weight_a < weight_b
+          ? 1
+          : member_a.user.username.localeCompare(member_b.user.username)
+      )
+
+      return sorted.map(([member]) => member.toString())
     },
     // #endregion
 
