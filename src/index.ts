@@ -2,17 +2,19 @@ import 'source-map-support/register.js'
 import 'discord-reply'
 
 import { field } from '@lolpants/jogger'
-import buttons, { MessageButton } from 'discord-buttons'
+import buttons from 'discord-buttons'
 import { Client, Intents } from 'discord.js'
 import { Colours, Reply, VoteResult } from '~constants.js'
 import { GUILD_ID, TOKEN } from '~env/index.js'
 import type { HandlerParameters } from '~interactions/index.js'
-import { interactionID, parseInteractionID } from '~interactions/index.js'
+import { parseInteractionID } from '~interactions/index.js'
 import { init__cancel } from '~interactions/init/cancel.js'
 import { init__confirm } from '~interactions/init/confirm.js'
+import { generateInitButtons } from '~interactions/init/utils.js'
 import { vote__approve } from '~interactions/vote/approve.js'
 import { vote__cancel } from '~interactions/vote/cancel.js'
 import { vote__revoke } from '~interactions/vote/revoke.js'
+import { generateVoteButtons } from '~interactions/vote/utils.js'
 import { errorField, flush, logger } from '~logger.js'
 import { createManager } from '~manager.js'
 import { exitHook } from './exit.js'
@@ -65,21 +67,14 @@ client.on('message', async message => {
     return
   }
 
-  const confirmButton = new MessageButton()
-    .setLabel('Confirm')
-    .setID(interactionID('init', 'confirm', message.author.id, target.id))
-    .setStyle('green')
-
-  const cancelButton = new MessageButton()
-    .setLabel('Cancel')
-    .setID(interactionID('init', 'cancel', message.author.id))
-    .setStyle('red')
+  const buttons = generateInitButtons({
+    confirmData: [message.author.id, target.id],
+    cancelData: [message.author.id],
+  })
 
   await message.channel.send(
     `Are you sure you want to start a vote against \`${target.user.tag}\`?`,
-    {
-      buttons: [confirmButton, cancelButton],
-    }
+    { buttons }
   )
 })
 
@@ -145,29 +140,13 @@ const interval = setInterval(async () => {
     embed.setDescription(`~~${embed.description}~~\n**${VoteResult.EXPIRED}**`)
     embed.setColor(Colours.GREY)
 
-    const approveButton = new MessageButton()
-      .setLabel('Approve')
-      .setID(interactionID('dummy', 'approve'))
-      .setStyle('blurple')
-      .setDisabled(true)
-
-    const revokeButton = new MessageButton()
-      .setLabel('Revoke Approval')
-      .setID(interactionID('dummy', 'revoke'))
-      .setStyle('gray')
-      .setDisabled(true)
-
-    const cancelButton = new MessageButton()
-      .setLabel('Cancel')
-      .setID(interactionID('dummy', 'cancel'))
-      .setStyle('red')
-      .setDisabled(true)
+    const buttons = generateVoteButtons({ disabled: true })
 
     // eslint-disable-next-line no-await-in-loop
     await vote.message.edit({
       embed,
       // @ts-expect-error
-      buttons: [approveButton, revokeButton, cancelButton],
+      buttons,
     })
 
     vote.cancel(null)

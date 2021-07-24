@@ -1,10 +1,9 @@
 import { field } from '@lolpants/jogger'
-import { MessageButton } from 'discord-buttons'
 import type { Role } from 'discord.js'
 import { Reply } from '~constants.js'
 import { ROLE_WEIGHTS } from '~env/index.js'
-import { interactionID } from '~interactions/index.js'
 import type { Handler } from '~interactions/index.js'
+import { generateVoteButtons } from '~interactions/vote/utils.js'
 import { logger } from '~logger.js'
 import { cancelConfirmation, checkUserID, generateEmbed } from './utils.js'
 
@@ -40,21 +39,6 @@ export const init__confirm: Handler = async ({
 
   await button.reply.defer(true)
   await button.message.delete()
-
-  const approveButton = new MessageButton()
-    .setLabel('Approve')
-    .setID(interactionID('vote', 'approve'))
-    .setStyle('blurple')
-
-  const revokeButton = new MessageButton()
-    .setLabel('Revoke Approval')
-    .setID(interactionID('vote', 'revoke'))
-    .setStyle('gray')
-
-  const cancelButton = new MessageButton()
-    .setLabel('Cancel')
-    .setID(interactionID('vote', 'cancel', userID))
-    .setStyle('red')
 
   const roles = [...ROLE_WEIGHTS.keys()]
     .map(id => button.guild.roles.resolve(id))
@@ -104,9 +88,10 @@ export const init__confirm: Handler = async ({
     votes: vote.voterList,
   })
 
+  const buttons = generateVoteButtons({ cancelData: [userID] })
   await message.edit({
     embed,
     // @ts-expect-error
-    buttons: [approveButton, revokeButton, cancelButton],
+    buttons,
   })
 }

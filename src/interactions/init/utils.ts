@@ -27,21 +27,8 @@ export const cancelConfirmation = async (
 ) => {
   await button.reply.defer(true)
 
-  const confirmButton = new MessageButton()
-    .setLabel('Confirm')
-    .setID(interactionID('dummy', 'confirm'))
-    .setStyle('green')
-    .setDisabled(true)
-
-  const cancelButton = new MessageButton()
-    .setLabel('Cancel')
-    .setID(interactionID('dummy', 'cancel'))
-    .setStyle('red')
-    .setDisabled(true)
-
-  await button.message.edit(editMessage, {
-    buttons: [confirmButton, cancelButton],
-  })
+  const buttons = generateInitButtons({ disabled: true })
+  await button.message.edit(editMessage, { buttons })
 
   await sleepMS(delay)
   if (button.message.deletable) await button.message.delete()
@@ -53,6 +40,36 @@ interface EmbedOptions {
   progress: string
   votes: string
 }
+
+type Buttons = [confirm: MessageButton, cancel: MessageButton]
+interface InitButtonOptions {
+  disabled?: boolean
+  confirmData?: string[]
+  cancelData?: string[]
+}
+
+export const generateInitButtons: (options: InitButtonOptions) => Buttons =
+  options => {
+    const disabled = options.disabled ?? false
+    const context = disabled ? 'dummy' : 'init'
+
+    const confirmData = options.confirmData ?? []
+    const cancelData = options.cancelData ?? []
+
+    const confirm = new MessageButton()
+      .setLabel('Confirm')
+      .setID(interactionID(context, 'confirm', ...confirmData))
+      .setStyle('green')
+      .setDisabled(disabled)
+
+    const cancel = new MessageButton()
+      .setLabel('Cancel')
+      .setID(interactionID(context, 'cancel', ...cancelData))
+      .setStyle('red')
+      .setDisabled(disabled)
+
+    return [confirm, cancel]
+  }
 
 export const generateEmbed: (options: EmbedOptions) => MessageEmbed = ({
   description,
