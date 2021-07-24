@@ -134,8 +134,9 @@ client.on('messageDelete', async message => {
     votes: vote.voterList,
   })
 
+  const mentions = vote.mentions.join(' ')
   const buttons = generateVoteButtons({ cancelData: [vote.initiator.id] })
-  const newMessage = await message.channel.send({ embed, buttons })
+  const newMessage = await message.channel.send(mentions, { embed, buttons })
 
   vote.replaceMessage(newMessage)
   logger.info(

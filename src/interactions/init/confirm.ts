@@ -1,10 +1,9 @@
 import { field } from '@lolpants/jogger'
-import type { Role } from 'discord.js'
 import { Reply } from '~constants.js'
-import { ROLE_WEIGHTS } from '~env/index.js'
 import type { Handler } from '~interactions/index.js'
 import { generateVoteButtons } from '~interactions/vote/utils.js'
 import { logger } from '~logger.js'
+import { generateMentions } from '~utils.js'
 import { cancelConfirmation, checkUserID, generateEmbed } from './utils.js'
 
 export const init__confirm: Handler = async ({
@@ -40,24 +39,8 @@ export const init__confirm: Handler = async ({
   await button.reply.defer(true)
   await button.message.delete()
 
-  const roles = [...ROLE_WEIGHTS.keys()]
-    .map(id => button.guild.roles.resolve(id))
-    .filter((role): role is Role => role !== null)
-    .sort((a, b) => b.position - a.position)
-
-  const notMentionable = roles.filter(role => !role.mentionable)
-  for (const role of notMentionable) {
-    // eslint-disable-next-line no-await-in-loop
-    await role.setMentionable(true)
-  }
-
-  const rolesString = roles.map(role => role.toString()).join(' ')
-  const message = await button.message.channel.send(rolesString)
-
-  for (const role of notMentionable) {
-    // eslint-disable-next-line no-await-in-loop
-    await role.setMentionable(false)
-  }
+  const mentions = generateMentions(button.guild.roles, target).join(' ')
+  const message = await button.message.channel.send(mentions)
 
   const initiator = button.clicker.member
   const vote = manager.startVote(message, initiator, target)
