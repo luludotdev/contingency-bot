@@ -1,6 +1,7 @@
 import { field } from '@lolpants/jogger'
 import { MessageButton } from 'discord-buttons'
 import type { Role } from 'discord.js'
+import { Reply } from '~constants.js'
 import { ROLE_WEIGHTS } from '~env/index.js'
 import { interactionID } from '~interactions/index.js'
 import type { Handler } from '~interactions/index.js'
@@ -19,10 +20,7 @@ export const init__confirm: Handler = async ({
   if (!isUser) return
 
   if (!targetID) {
-    await cancelConfirmation(
-      button,
-      'An error occurred, please check the bot log.'
-    )
+    await cancelConfirmation(button, Reply.ERR_GENERIC)
 
     logger.error(
       field('interaction', key),
@@ -34,12 +32,9 @@ export const init__confirm: Handler = async ({
 
   const target = button.guild.member(targetID)
   if (!target) {
-    await cancelConfirmation(
-      button,
-      'An error occurred, please check the bot log.'
-    )
-
+    await cancelConfirmation(button, Reply.ERR_GENERIC)
     logger.error(field('interaction', key), field('error', 'target === null'))
+
     return
   }
 

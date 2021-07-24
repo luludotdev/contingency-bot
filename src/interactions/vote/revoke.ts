@@ -1,4 +1,4 @@
-import { Colours, VoteResult } from '~constants.js'
+import { Colours, Reply, VoteResult } from '~constants.js'
 import type { Handler } from '~interactions/index.js'
 import { cancelVote } from './utils.js'
 
@@ -25,12 +25,12 @@ export const vote__revoke: Handler = async ({ manager, button }) => {
   }
 
   if (!vote.canVote(member)) {
-    await reply('You are not allowed to do that.')
+    await reply(Reply.ERR_NO_PERM)
     return
   }
 
   if (!vote.hasVoted(member)) {
-    await reply('You have not voted!')
+    await reply(Reply.NOT_VOTED)
     return
   }
 

@@ -4,7 +4,7 @@ import 'discord-reply'
 import { field } from '@lolpants/jogger'
 import buttons, { MessageButton } from 'discord-buttons'
 import { Client, Intents } from 'discord.js'
-import { Colours, VoteResult } from '~constants.js'
+import { Colours, Reply, VoteResult } from '~constants.js'
 import { GUILD_ID, TOKEN } from '~env/index.js'
 import type { HandlerParameters } from '~interactions/index.js'
 import { interactionID, parseInteractionID } from '~interactions/index.js'
@@ -48,21 +48,20 @@ client.on('message', async message => {
 
   const target = message.guild.member(targetID)
   if (target === null) {
-    await message.lineReply('Could not resolve a user with that ID!')
+    await message.lineReply(Reply.ERR_UNKNOWN_USER)
     return
   }
 
   if (target.id === message.author.id) {
-    await message.lineReply('You cannot start a vote against yourself!')
+    await message.lineReply(Reply.ERR_IS_SELF)
     return
   }
 
   const inProgress = manager.voteInProgress(target)
   if (inProgress !== undefined) {
     await message.lineReply(
-      `A vote against that user is already in progress!\n${inProgress.message.url}`
+      `${Reply.ERR_IN_PROGRESS}\n${inProgress.message.url}`
     )
-
     return
   }
 

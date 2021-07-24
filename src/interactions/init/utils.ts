@@ -2,14 +2,14 @@ import { MessageButton } from 'discord-buttons'
 import type { MessageComponent } from 'discord-buttons'
 import { MessageEmbed } from 'discord.js'
 import type { ColorResolvable } from 'discord.js'
-import { Colours } from '~constants.js'
+import { Colours, Reply } from '~constants.js'
 import { interactionID } from '~interactions/index.js'
 import { sleepMS } from '~utils.js'
 
 export const checkUserID = async (button: MessageComponent, userID: string) => {
   if (button.clicker.id !== userID) {
     await button.reply.send(
-      'Only the user who started the vote can confirm or cancel.',
+      Reply.ERR_NOT_INITIATOR,
       // @ts-expect-error
       true
     )
