@@ -3,3 +3,9 @@ export const enum Colours {
   GREY = 0x4f_54_5c,
   GREEN = 0x3b_a5_5d,
 }
+
+export const enum VoteResult {
+  EXPIRED = 'This vote has expired.',
+  CANCELLED = 'This vote was cancelled.',
+  PASSED = 'Vote passed.',
+}

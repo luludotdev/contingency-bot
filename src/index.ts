@@ -4,7 +4,7 @@ import 'discord-reply'
 import { field } from '@lolpants/jogger'
 import buttons, { MessageButton } from 'discord-buttons'
 import { Client, Intents } from 'discord.js'
-import { Colours } from '~constants.js'
+import { Colours, VoteResult } from '~constants.js'
 import { GUILD_ID, TOKEN } from '~env/index.js'
 import type { HandlerParameters } from '~interactions/index.js'
 import { interactionID, parseInteractionID } from '~interactions/index.js'
@@ -143,7 +143,7 @@ const interval = setInterval(async () => {
 
   for (const vote of expired) {
     const embed = vote.message.embeds[0]
-    embed.setDescription(`~~${embed.description}~~\n**This vote has expired.**`)
+    embed.setDescription(`~~${embed.description}~~\n**${VoteResult.EXPIRED}**`)
     embed.setColor(Colours.GREY)
 
     const approveButton = new MessageButton()

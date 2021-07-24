@@ -1,4 +1,4 @@
-import { Colours } from '~constants.js'
+import { Colours, VoteResult } from '~constants.js'
 import type { Handler } from '~interactions/index.js'
 import { cancelVote } from './utils.js'
 
@@ -8,7 +8,7 @@ export const vote__approve: Handler = async ({ manager, button }) => {
 
   if (vote === undefined) {
     const embed = button.message.embeds[0]
-    embed.setDescription(`~~${embed.description}~~\n**This vote has expired.**`)
+    embed.setDescription(`~~${embed.description}~~\n**${VoteResult.EXPIRED}**`)
     embed.setColor(Colours.GREY)
 
     await cancelVote(button, embed)
@@ -47,8 +47,8 @@ export const vote__approve: Handler = async ({ manager, button }) => {
   embed.fields[1].value = vote.voterList
 
   if (vote.isMet) {
-    embed.description = `~~${embed.description}~~\n**Vote passed.**`
-    embed.color = Colours.GREEN
+    embed.setDescription(`~~${embed.description}~~\n**${VoteResult.PASSED}**`)
+    embed.setColor(Colours.GREEN)
 
     vote.cancel(null)
     await cancelVote(button, embed, false)
