@@ -1,5 +1,10 @@
 import type { GuildMember, Message } from 'discord.js'
-import { ROLE_WEIGHTS, TARGET_SCORE, VOTING_WEIGHT } from '~env/index.js'
+import {
+  MAX_VOTE_LIFETIME,
+  ROLE_WEIGHTS,
+  TARGET_SCORE,
+  VOTING_WEIGHT,
+} from '~env/index.js'
 
 export interface Manager {
   startVote(message: Message, initiator: GuildMember, target: GuildMember): Vote
@@ -7,6 +12,7 @@ export interface Manager {
 
   getVote(messageID: string): Vote | undefined
   voteInProgress(target: GuildMember): Vote | undefined
+  getExpired(): Vote[]
 
   canInitiate(member: GuildMember): boolean
 }
@@ -65,6 +71,18 @@ export const createManager: () => Manager = () => {
       }
 
       return undefined
+    },
+
+    getExpired() {
+      const now = Date.now()
+      const expired = [...votes.values()].filter(vote => {
+        const startedAt = vote.startedAt.getTime()
+        const future = startedAt + MAX_VOTE_LIFETIME
+
+        return now > future
+      })
+
+      return expired
     },
 
     canInitiate(member) {
