@@ -70,7 +70,10 @@ export const vote__approve: Handler = async ({ manager, button }) => {
       field('id', vote.message.id)
     )
 
-    // TODO: Perform moderation action
+    await vote.target.roles.remove(
+      vote.target.roles.cache,
+      `Emergency vote called by ${vote.initiator.user.tag}`
+    )
   } else {
     await button.message.edit({ embed })
   }
