@@ -64,11 +64,19 @@ client.on('message', async message => {
     return
   }
 
+  const botRolePosition = message.guild.me?.roles.highest.position ?? -1
+  const targetRolePosition = target.roles.highest.position
+  if (botRolePosition <= targetRolePosition) {
+    await message.lineReply(Reply.ERR_TARGET_HIGHER)
+    return
+  }
+
   const inProgress = manager.voteInProgress(target)
   if (inProgress !== undefined) {
     await message.lineReply(
       `${Reply.ERR_IN_PROGRESS}\n${inProgress.message.url}`
     )
+
     return
   }
 

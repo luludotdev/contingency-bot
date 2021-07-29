@@ -21,5 +21,6 @@ export const enum Reply {
   ERR_IS_TARGET = 'You may not approve as you are the target of this vote.',
   ERR_NO_PERM = 'You are not allowed to do that.',
   ERR_NOT_INITIATOR = 'Only the user who started the vote can confirm or cancel.',
+  ERR_TARGET_HIGHER = 'Could not start a vote against that user due to role positions.',
   ERR_UNKNOWN_USER = 'Could not resolve a user with that ID!',
 }
