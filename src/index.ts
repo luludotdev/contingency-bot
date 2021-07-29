@@ -82,7 +82,7 @@ client.on('message', async message => {
 
   const buttons = generateInitButtons({
     confirmData: [message.author.id, target.id],
-    cancelData: [message.author.id],
+    cancelData: [message.author.id, message.id],
   })
 
   await message.channel.send(
