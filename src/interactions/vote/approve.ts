@@ -1,5 +1,7 @@
 import { field } from '@lolpants/jogger'
+import { DiscordAPIError } from 'discord.js'
 import { Colours, Reply, VoteResult } from '~constants.js'
+import { DRY_RUN } from '~env/index.js'
 import type { Handler } from '~interactions/index.js'
 import { logger } from '~logger.js'
 import { cancelVote } from './utils.js'
@@ -59,7 +61,6 @@ export const vote__approve: Handler = async ({ manager, button }) => {
 
   if (vote.isMet) {
     embed.setDescription(`~~${embed.description}~~\n**${VoteResult.PASSED}**`)
-    embed.setColor(Colours.GREEN)
 
     vote.cancel(null)
     await cancelVote(button, embed, false)
@@ -70,15 +71,37 @@ export const vote__approve: Handler = async ({ manager, button }) => {
       field('id', vote.message.id)
     )
 
-    await vote.target.roles.remove(
-      vote.target.roles.cache,
-      `Emergency vote called by ${vote.initiator.user.tag}`
-    )
+    try {
+      if (DRY_RUN === false) {
+        await vote.target.roles.remove(
+          vote.target.roles.cache,
+          `Emergency vote called by ${vote.initiator.user.tag}`
+        )
+      } else {
+        // Check permissions anyway
+        const hasPerms = vote.message.guild?.me?.hasPermission('MANAGE_ROLES')
+        if (hasPerms === false) {
+          throw new CustomError('Missing Permissions')
+        }
+      }
 
-    embed.setDescription(
-      `${embed.description}\n\nAll roles removed from ${vote.target} successfully!`
-    )
+      embed.setColor(Colours.GREEN)
+      embed.setDescription(
+        `${embed.description}\n\nAll roles removed from ${vote.target} successfully!`
+      )
+    } catch (error: unknown) {
+      embed.setColor(Colours.GREY)
+      embed.setDescription(
+        `${embed.description}\n\nFailed to remove roles from ${vote.target}`
+      )
+
+      if (error instanceof DiscordAPIError || error instanceof CustomError) {
+        embed.setDescription(`${embed.description}\n**${error.message}.**`)
+      }
+    }
   }
 
   await button.message.edit({ embed })
 }
+
+class CustomError extends Error {}
