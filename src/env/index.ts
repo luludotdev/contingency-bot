@@ -1,5 +1,5 @@
 import ms from 'ms'
-import { registerInt, registerString } from './register.js'
+import { registerBool, registerInt, registerString } from './register.js'
 
 // #region Globals
 const NODE_ENV = registerString('NODE_ENV')
@@ -10,6 +10,7 @@ export const IS_DEV = !IS_PROD
 // #region Bot
 export const TOKEN = registerString('TOKEN', true)
 export const GUILD_ID = registerString('GUILD_ID', true)
+export const DRY_RUN = registerBool('DRY_RUN') ?? false
 // #endregion
 
 // #region Roles

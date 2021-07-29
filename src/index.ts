@@ -4,7 +4,7 @@ import 'discord-reply'
 import { field } from '@lolpants/jogger'
 import buttons from 'discord-buttons'
 import { Client, Intents } from 'discord.js'
-import { Colours, Reply, VoteResult } from '~constants.js'
+import { Colours, DRY_RUN_RICH, Reply, VoteResult } from '~constants.js'
 import { GUILD_ID, TOKEN } from '~env/index.js'
 import type { HandlerParameters } from '~interactions/index.js'
 import { parseInteractionID } from '~interactions/index.js'
@@ -86,7 +86,7 @@ client.on('message', async message => {
   })
 
   await message.channel.send(
-    `Are you sure you want to start a vote against \`${target.user.tag}\`?`,
+    `${DRY_RUN_RICH}Are you sure you want to start a vote against \`${target.user.tag}\`?`,
     { buttons }
   )
 })

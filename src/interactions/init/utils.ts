@@ -2,7 +2,7 @@ import { MessageButton } from 'discord-buttons'
 import type { MessageComponent } from 'discord-buttons'
 import { MessageEmbed } from 'discord.js'
 import type { ColorResolvable } from 'discord.js'
-import { Colours, Reply } from '~constants.js'
+import { Colours, DRY_RUN_PREFIX, Reply } from '~constants.js'
 import { interactionID } from '~interactions/index.js'
 import { sleepMS } from '~utils.js'
 
@@ -78,7 +78,7 @@ export const generateEmbed: (options: EmbedOptions) => MessageEmbed = ({
   votes,
 }) => {
   const embed = new MessageEmbed()
-    .setTitle('Emergency Vote')
+    .setTitle(`${DRY_RUN_PREFIX}Emergency Vote`)
     .setColor(colour ?? Colours.RED)
     .setDescription(description)
     .addField('Progress', progress)

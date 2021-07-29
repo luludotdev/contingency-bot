@@ -1,8 +1,14 @@
+import { DRY_RUN } from '~env/index.js'
+
 export const enum Colours {
   GREEN = 0x3b_a5_5d,
   GREY = 0x4f_54_5c,
   RED = 0xed_42_45,
 }
+
+const DRY_RUN_TEXT = '[Dry Run]'
+export const DRY_RUN_PREFIX = DRY_RUN ? `${DRY_RUN_TEXT} ` : ''
+export const DRY_RUN_RICH = DRY_RUN ? `**${DRY_RUN_TEXT}** ` : ''
 
 export const enum VoteResult {
   CANCELLED = 'This vote was cancelled.',
