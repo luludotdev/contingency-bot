@@ -54,6 +54,11 @@ client.on('message', async message => {
     return
   }
 
+  if (target.id === client.user?.id) {
+    await message.lineReply(Reply.ERR_IS_BOT)
+    return
+  }
+
   if (target.id === message.author.id) {
     await message.lineReply(Reply.ERR_IS_SELF)
     return

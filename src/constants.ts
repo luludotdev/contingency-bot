@@ -16,6 +16,7 @@ export const enum Reply {
   VOTE_CANCELLED = 'Vote Cancelled.',
   ERR_GENERIC = 'An error occurred, please check the bot log.',
   ERR_IN_PROGRESS = 'A vote against that user is already in progress!',
+  ERR_IS_BOT = 'You cannot start a vote this bot!',
   ERR_IS_SELF = 'You cannot start a vote against yourself!',
   ERR_IS_TARGET = 'You may not approve as you are the target of this vote.',
   ERR_NO_PERM = 'You are not allowed to do that.',
