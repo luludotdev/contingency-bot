@@ -1,4 +1,4 @@
-import type { MessageComponent } from 'discord-buttons'
+import type { ButtonInteraction } from 'discord.js'
 import type { Manager } from '~manager.js'
 
 export const interactionID: (
@@ -29,7 +29,7 @@ export const parseInteractionID: (id: string) => ParsedInteraction = rawID => {
 
 export type Handler = (parameters: HandlerParameters) => Promise<void>
 export interface HandlerParameters {
-  button: MessageComponent
+  button: ButtonInteraction
   manager: Manager
 
   key: ParsedInteraction['key']
