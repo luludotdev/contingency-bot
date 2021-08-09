@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1.2
-FROM node:14-alpine AS deps-common
+FROM node:14-alpine as base
+FROM base AS deps-common
 
 WORKDIR /app
 COPY ./package.json ./yarn.lock ./
@@ -17,7 +18,7 @@ RUN apk add --no-cache --virtual build-deps python alpine-sdk autoconf libtool a
   apk del build-deps
 
 # ---
-FROM node:14-alpine AS builder
+FROM base AS builder
 WORKDIR /app
 
 COPY . .
@@ -25,7 +26,7 @@ COPY --from=deps-dev /app/node_modules ./node_modules
 RUN yarn build
 
 # ---
-FROM node:14-alpine AS runner
+FROM base AS runner
 
 WORKDIR /app
 ENV NODE_ENV production
