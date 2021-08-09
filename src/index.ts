@@ -99,9 +99,9 @@ client.on('interactionCreate', async button => {
   }
 
   switch (key) {
-    // case 'init@cancel':
-    //   await init__cancel(parameters)
-    //   break
+    case 'init@cancel':
+      await init__cancel(parameters)
+      break
 
     // case 'init@confirm':
     //   await init__confirm(parameters)

@@ -1,38 +1,31 @@
-// import { MessageButton } from 'discord-buttons'
-// import type { MessageComponent } from 'discord-buttons'
 import { MessageEmbed, MessageButton, MessageActionRow } from 'discord.js'
-import type { ColorResolvable } from 'discord.js'
+import type { ButtonInteraction, ColorResolvable } from 'discord.js'
 import { Colours, DRY_RUN_PREFIX, Reply } from '~constants.js'
 import { interactionID } from '~interactions/index.js'
 import { sleepMS } from '~utils.js'
 
-// export const checkUserID = async (button: MessageComponent, userID: string) => {
-//   if (button.clicker.id !== userID) {
-//     await button.reply.send(
-//       Reply.ERR_NOT_INITIATOR,
-//       // @ts-expect-error
-//       true
-//     )
+export const checkUserID = async (button: ButtonInteraction, userID: string) => {
+  if (button.user.id !== userID) {
+    await button.reply({ content: Reply.ERR_NOT_INITIATOR, ephemeral: true })
+    return false
+  }
 
-//     return false
-//   }
+  return true
+}
 
-//   return true
-// }
+export const cancelConfirmation = async (
+  button: ButtonInteraction,
+  editMessage: string,
+  delay = 5000
+) => {
+  const buttons = generateInitButtons({ disabled: true })
+  await button.update({ content: editMessage, components: [buttons] })
 
-// export const cancelConfirmation = async (
-//   button: MessageComponent,
-//   editMessage: string,
-//   delay = 5000
-// ) => {
-//   await button.reply.defer(true)
+  await sleepMS(delay)
 
-//   const buttons = generateInitButtons({ disabled: true })
-//   await button.message.edit(editMessage, { buttons })
-
-//   await sleepMS(delay)
-//   if (button.message.deletable) await button.message.delete()
-// }
+  const message = button.channel?.messages.cache.get(button.message.id)
+  if (message?.deletable) await message.delete()
+}
 
 interface InitButtonOptions {
   disabled?: boolean

@@ -10,6 +10,6 @@ export const init__cancel: Handler = async ({ button, components }) => {
 
   await cancelConfirmation(button, Reply.VOTE_CANCELLED, 1500)
 
-  const message = button.message.channel.messages.resolve(messageID)
+  const message = button.channel?.messages.resolve(messageID)
   if (message?.deletable) await message.delete()
 }
