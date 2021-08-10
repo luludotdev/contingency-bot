@@ -23,6 +23,7 @@
   "devDependencies": {
     "@types/ms": "^0.7.31",
     "@types/node": "^16.4.13",
+    "discord-api-types": "^0.22.0",
     "nodemon": "^2.0.12",
     "rimraf": "^3.0.2",
     "ttypescript": "^1.5.12",

@@ -1,4 +1,6 @@
-import type { GuildMember, RoleManager } from 'discord.js'
+import type { APIMessage } from 'discord-api-types'
+import { Message } from 'discord.js'
+import type { GuildMember, RoleManager, TextBasedChannels } from 'discord.js'
 import { ROLE_WEIGHTS } from '~env/index.js'
 
 export const sleepMS: (ms: number) => Promise<void> = async ms =>
@@ -7,6 +9,29 @@ export const sleepMS: (ms: number) => Promise<void> = async ms =>
       resolve()
     }, ms)
   })
+
+export function resolveMessage(
+  channel: TextBasedChannels,
+  message: Message | APIMessage | string,
+  fetch: true
+): Promise<Message>
+export function resolveMessage(
+  channel: TextBasedChannels,
+  message: Message | APIMessage | string,
+  fetch?: false
+): Promise<Message | undefined>
+export async function resolveMessage(
+  channel: TextBasedChannels,
+  message: Message | APIMessage | string,
+  fetch = false
+): Promise<Message | undefined> {
+  if (message instanceof Message) return message
+
+  const messageID = typeof message === 'string' ? message : message.id
+  if (!fetch) channel.messages.cache.get(messageID)
+
+  return channel.messages.fetch(messageID)
+}
 
 export const voteWeight: (member: GuildMember) => number = member => {
   const roleTest = member.roles.cache

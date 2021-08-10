@@ -3,7 +3,7 @@ import { Reply } from '~constants.js'
 import type { Handler } from '~interactions/index.js'
 import { generateVoteButtons } from '~interactions/vote/utils.js'
 import { logger } from '~logger.js'
-import { generateMentions } from '~utils.js'
+import { generateMentions, resolveMessage } from '~utils.js'
 import { cancelConfirmation, checkUserID, generateEmbed } from './utils.js'
 
 export const init__confirm: Handler = async ({
@@ -38,8 +38,8 @@ export const init__confirm: Handler = async ({
     return
   }
 
-  const buttonMessage = await button.channel.messages.fetch(button.message.id)
-  await buttonMessage.delete()
+  const btnMessage = await resolveMessage(button.channel, button.message, true)
+  await btnMessage.delete()
 
   const mentions = generateMentions(button.guild.roles, target).join(' ')
   const message = await button.channel.send({ content: mentions })
