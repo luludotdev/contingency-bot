@@ -34,8 +34,9 @@ client.on('ready', async () => {
 
   const guild = await client.guilds.fetch(GUILD_ID)
   const members = await guild.members.fetch({ limit: 500_000 })
-
   logger.info(field('action', 'sync-members'), field('members', members.size))
+
+  await sweepCache()
 })
 
 client.on('messageCreate', async message => {
@@ -165,7 +166,19 @@ client.on('messageDelete', async message => {
   )
 })
 
-const interval = setInterval(async () => {
+const sweepCache = async () => {
+  // Wait for client to be ready
+  if (client.readyAt === null) return
+
+  const guild = await client.guilds.fetch(GUILD_ID)
+  const swept = guild.members.cache.sweep(
+    member => member.roles.highest.id === guild.id
+  )
+
+  logger.info(field('action', 'sweep-members'), field('swept', swept))
+}
+
+const expireInterval = setInterval(async () => {
   // Wait for client to be ready
   if (client.readyAt === null) return
 
@@ -199,8 +212,13 @@ const interval = setInterval(async () => {
   }
 }, 1000 * 60)
 
+const sweepInterval = setInterval(() => {
+  void sweepCache()
+}, 1000 * 90)
+
 exitHook(async (exit, error) => {
-  clearInterval(interval)
+  clearInterval(expireInterval)
+  clearInterval(sweepInterval)
   client.destroy()
 
   if (error) {
