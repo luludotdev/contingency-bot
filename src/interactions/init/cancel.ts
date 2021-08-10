@@ -4,7 +4,7 @@ import { resolveMessage } from '~utils.js'
 import { cancelConfirmation, checkUserID } from './utils.js'
 
 export const init__cancel: Handler = async ({ button, components }) => {
-  if (!button.channel) return
+  if (!button.channel) throw new Error('missing channel')
   const [userID, messageID] = components
 
   const isUser = await checkUserID(button, userID)

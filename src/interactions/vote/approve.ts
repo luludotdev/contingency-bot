@@ -8,8 +8,8 @@ import { resolveMessage } from '~utils.js'
 import { cancelVote } from './utils.js'
 
 export const vote__approve: Handler = async ({ manager, button }) => {
-  if (!button.guild) return
-  if (!button.channel) return
+  if (!button.guild) throw new Error('missing guild')
+  if (!button.channel) throw new Error('missing channel')
 
   const message = await resolveMessage(button.channel, button.message, true)
   const messageID = button.message.id
@@ -25,7 +25,7 @@ export const vote__approve: Handler = async ({ manager, button }) => {
   }
 
   const member = button.guild.members.cache.get(button.user.id)
-  if (!member) return
+  if (!member) throw new Error('missing member')
 
   const reply = async (message: string) => {
     await button.reply({ content: message, ephemeral: true })

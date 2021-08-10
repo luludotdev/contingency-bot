@@ -12,8 +12,8 @@ export const init__confirm: Handler = async ({
   key,
   components,
 }) => {
-  if (!button.guild) return
-  if (!button.channel) return
+  if (!button.guild) throw new Error('missing guild')
+  if (!button.channel) throw new Error('missing channel')
 
   const [userID, targetID] = components
   const isUser = await checkUserID(button, userID)
