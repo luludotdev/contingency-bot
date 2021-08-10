@@ -12,7 +12,7 @@ RUN yarn install --no-optional --frozen-lockfile && \
 
 # ---
 FROM deps-common AS deps-prod
-RUN apk add --no-cache --virtual build-deps python alpine-sdk autoconf libtool automake && \
+RUN apk add --no-cache --virtual build-deps python3 alpine-sdk autoconf libtool automake && \
   yarn install --production=true --frozen-lockfile && \
   yarn cache clean && \
   apk del build-deps
