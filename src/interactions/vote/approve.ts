@@ -4,14 +4,19 @@ import { Colours, Reply, VoteResult } from '~constants.js'
 import { DRY_RUN } from '~env/index.js'
 import type { Handler } from '~interactions/index.js'
 import { logger } from '~logger.js'
+import { resolveMessage } from '~utils.js'
 import { cancelVote } from './utils.js'
 
 export const vote__approve: Handler = async ({ manager, button }) => {
+  if (!button.guild) return
+  if (!button.channel) return
+
+  const message = await resolveMessage(button.channel, button.message, true)
   const messageID = button.message.id
   const vote = manager.getVote(messageID)
 
   if (vote === undefined) {
-    const embed = button.message.embeds[0]
+    const embed = message.embeds[0]
     embed.setDescription(`~~${embed.description}~~\n**${VoteResult.EXPIRED}**`)
     embed.setColor(Colours.GREY)
 
@@ -19,13 +24,11 @@ export const vote__approve: Handler = async ({ manager, button }) => {
     return
   }
 
-  const member = button.clicker.member
+  const member = button.guild.members.cache.get(button.user.id)
+  if (!member) return
+
   const reply = async (message: string) => {
-    await button.reply.send(
-      message,
-      // @ts-expect-error
-      true
-    )
+    await button.reply({ content: message, ephemeral: true })
   }
 
   if (vote.isTarget(member)) {
@@ -43,19 +46,17 @@ export const vote__approve: Handler = async ({ manager, button }) => {
     return
   }
 
-  await button.reply.defer(true)
-  vote.approve(button.clicker.member)
-
+  vote.approve(member)
   logger.info(
     field('context', 'vote'),
     field('action', 'approve'),
     field('id', vote.message.id),
-    field('user', button.clicker.member.user.tag),
-    field('userID', button.clicker.member.id),
+    field('user', member.user.tag),
+    field('userID', member.id),
     field('progress', vote.progress)
   )
 
-  const embed = button.message.embeds[0]
+  const embed = message.embeds[0]
   embed.fields[0].value = vote.progress
   embed.fields[1].value = vote.voterList
 
@@ -63,7 +64,7 @@ export const vote__approve: Handler = async ({ manager, button }) => {
     embed.setDescription(`~~${embed.description}~~\n**${VoteResult.PASSED}**`)
 
     vote.cancel(null)
-    await cancelVote(button, embed, false)
+    await cancelVote(button, embed)
 
     logger.info(
       field('context', 'vote'),
@@ -79,7 +80,7 @@ export const vote__approve: Handler = async ({ manager, button }) => {
         )
       } else {
         // Check permissions anyway
-        const hasPerms = vote.message.guild?.me?.hasPermission('MANAGE_ROLES')
+        const hasPerms = vote.message.guild?.me?.permissions.has('MANAGE_ROLES')
         if (hasPerms === false) {
           throw new CustomError('Missing Permissions')
         }
@@ -101,7 +102,9 @@ export const vote__approve: Handler = async ({ manager, button }) => {
     }
   }
 
-  await button.message.edit({ embed })
+  await (vote.isMet
+    ? message.edit({ embeds: [embed] })
+    : button.update({ embeds: [embed] }))
 }
 
 class CustomError extends Error {}

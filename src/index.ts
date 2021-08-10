@@ -1,7 +1,7 @@
 import 'source-map-support/register.js'
 
 import { field } from '@lolpants/jogger'
-import { Client, Intents, MessageButton } from 'discord.js'
+import { Client, Intents } from 'discord.js'
 import { Colours, DRY_RUN_RICH, Reply, VoteResult } from '~constants.js'
 import { GUILD_ID, TOKEN } from '~env/index.js'
 import type { HandlerParameters } from '~interactions/index.js'
@@ -113,17 +113,17 @@ client.on('interactionCreate', async button => {
       await init__confirm(parameters)
       break
 
-    // case 'vote@approve':
-    //   await vote__approve(parameters)
-    //   break
+    case 'vote@approve':
+      await vote__approve(parameters)
+      break
 
     case 'vote@cancel':
       await vote__cancel(parameters)
       break
 
-    // case 'vote@revoke':
-    //   await vote__revoke(parameters)
-    //   break
+    case 'vote@revoke':
+      await vote__revoke(parameters)
+      break
 
     default: {
       logger.error(
