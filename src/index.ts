@@ -131,29 +131,29 @@ client.on('interactionCreate', async button => {
   }
 })
 
-// client.on('messageDelete', async message => {
-//   const vote = manager.getVote(message.id)
-//   if (vote === undefined) return
+client.on('messageDelete', async message => {
+  const vote = manager.getVote(message.id)
+  if (vote === undefined) return
 
-//   const description = `${vote.initiator} has started a vote to strip roles from ${vote.target}`
-//   const embed = generateEmbed({
-//     description,
-//     progress: vote.progress,
-//     votes: vote.voterList,
-//   })
+  const description = `${vote.initiator} has started a vote to strip roles from ${vote.target}`
+  const embed = generateEmbed({
+    description,
+    progress: vote.progress,
+    votes: vote.voterList,
+  })
 
-//   const mentions = vote.mentions.join(' ')
-//   const buttons = generateVoteButtons({ cancelData: [vote.initiator.id] })
-//   const newMessage = await message.channel.send(mentions, { embed, buttons })
+  const mentions = vote.mentions.join(' ')
+  const buttons = generateVoteButtons({ cancelData: [vote.initiator.id] })
+  const newMessage = await message.channel.send({ content: mentions, embeds: [embed], components: [buttons] })
 
-//   vote.replaceMessage(newMessage)
-//   logger.info(
-//     field('context', 'vote'),
-//     field('action', 'message-replaced'),
-//     field('oldID', message.id),
-//     field('newID', newMessage.id)
-//   )
-// })
+  vote.replaceMessage(newMessage)
+  logger.info(
+    field('context', 'vote'),
+    field('action', 'message-replaced'),
+    field('oldID', message.id),
+    field('newID', newMessage.id)
+  )
+})
 
 const interval = setInterval(async () => {
   // Wait for client to be ready
