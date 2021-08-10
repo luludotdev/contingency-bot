@@ -7,7 +7,7 @@ COPY ./package.json ./yarn.lock ./
 
 # ---
 FROM deps-common AS deps-dev
-RUN yarn install --no-optional --frozen-lockfile && \
+RUN yarn install --ignore-optional --frozen-lockfile && \
   yarn cache clean
 
 # ---
