@@ -2,6 +2,7 @@ import 'source-map-support/register.js'
 
 import { field } from '@lolpants/jogger'
 import { Client, Intents } from 'discord.js'
+import { help } from '~commands/help.js'
 import type { CommandParameters } from '~commands/index.js'
 import { startVote } from '~commands/startVote.js'
 import { Colours, VoteResult } from '~constants.js'
@@ -69,6 +70,10 @@ client.on('messageCreate', async message => {
   switch (command.toLowerCase()) {
     case 'startvote':
       await startVote(parameters)
+      break
+
+    case 'help':
+      await help(parameters)
       break
 
     default: {

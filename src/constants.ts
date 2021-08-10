@@ -20,6 +20,7 @@ export const enum Reply {
   ALREADY_VOTED = 'You have already voted!',
   NOT_VOTED = 'You have not voted!',
   VOTE_CANCELLED = 'Vote Cancelled.',
+  ERR_DMS_CLOSED = 'Could not send help in DMs! Adjust your privacy settings and try again.',
   ERR_GENERIC = 'An error occurred, please check the bot log.',
   ERR_IN_PROGRESS = 'A vote against that user is already in progress!',
   ERR_IS_BOT = 'You cannot start a vote against this bot!',
