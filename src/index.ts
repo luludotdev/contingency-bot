@@ -103,9 +103,9 @@ client.on('interactionCreate', async button => {
       await init__cancel(parameters)
       break
 
-    // case 'init@confirm':
-    //   await init__confirm(parameters)
-    //   break
+    case 'init@confirm':
+      await init__confirm(parameters)
+      break
 
     // case 'vote@approve':
     //   await vote__approve(parameters)

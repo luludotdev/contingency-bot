@@ -12,8 +12,10 @@ export const init__confirm: Handler = async ({
   key,
   components,
 }) => {
-  const [userID, targetID] = components
+  if (!button.guild) return
+  if (!button.channel) return
 
+  const [userID, targetID] = components
   const isUser = await checkUserID(button, userID)
   if (!isUser) return
 
@@ -28,7 +30,7 @@ export const init__confirm: Handler = async ({
     return
   }
 
-  const target = button.guild.member(targetID)
+  const target = button.guild.members.cache.get(targetID)
   if (!target) {
     await cancelConfirmation(button, Reply.ERR_GENERIC)
     logger.error(field('interaction', key), field('error', 'target === null'))
@@ -36,13 +38,14 @@ export const init__confirm: Handler = async ({
     return
   }
 
-  await button.reply.defer(true)
-  await button.message.delete()
+  const buttonMessage = await button.channel.messages.fetch(button.message.id)
+  await buttonMessage.delete()
 
   const mentions = generateMentions(button.guild.roles, target).join(' ')
-  const message = await button.message.channel.send(mentions)
+  const message = await button.channel.send({ content: mentions })
 
-  const initiator = button.clicker.member
+
+  const initiator = button.guild.members.cache.get(button.user.id)!
   const vote = manager.startVote(message, initiator, target)
 
   logger.info(
@@ -59,8 +62,8 @@ export const init__confirm: Handler = async ({
     field('context', 'vote'),
     field('action', 'approve'),
     field('id', vote.message.id),
-    field('user', button.clicker.member.user.tag),
-    field('userID', button.clicker.member.id),
+    field('user', button.user.tag),
+    field('userID', button.user.id),
     field('progress', vote.progress)
   )
 
@@ -73,8 +76,7 @@ export const init__confirm: Handler = async ({
 
   const buttons = generateVoteButtons({ cancelData: [userID] })
   await message.edit({
-    embed,
-    // @ts-expect-error
-    buttons,
+    embeds: [embed],
+    components: [buttons],
   })
 }

@@ -1,24 +1,14 @@
-import { MessageButton } from 'discord-buttons'
-import type { MessageComponent } from 'discord-buttons'
-import { MessageEmbed } from 'discord.js'
+import { MessageEmbed, MessageActionRow, MessageButton } from 'discord.js'
+import type { ButtonInteraction } from 'discord.js'
 import { interactionID } from '~interactions/index.js'
 
 export const cancelVote = async (
-  button: MessageComponent,
-  embed: MessageEmbed,
-  defer = true
+  button: ButtonInteraction,
+  embed: MessageEmbed
 ) => {
-  if (defer) await button.reply.defer(true)
-
   const buttons = generateVoteButtons({ disabled: true })
-  await button.message.edit({ embed, buttons })
+  await button.update({ embeds: [embed], components: [buttons] })
 }
-
-type Buttons = [
-  approve: MessageButton,
-  revoke: MessageButton,
-  cancel: MessageButton
-]
 
 interface VoteButtonOptions {
   disabled?: boolean
@@ -27,7 +17,7 @@ interface VoteButtonOptions {
   cancelData?: string[]
 }
 
-export const generateVoteButtons: (options: VoteButtonOptions) => Buttons =
+export const generateVoteButtons: (options: VoteButtonOptions) => MessageActionRow =
   options => {
     const disabled = options.disabled ?? false
     const context = disabled ? 'dummy' : 'vote'
@@ -38,21 +28,22 @@ export const generateVoteButtons: (options: VoteButtonOptions) => Buttons =
 
     const approve = new MessageButton()
       .setLabel('Approve')
-      .setID(interactionID(context, 'approve', ...approveData))
-      .setStyle('blurple')
+      .setCustomId(interactionID(context, 'approve', ...approveData))
+      .setStyle('PRIMARY')
       .setDisabled(disabled)
 
     const revoke = new MessageButton()
       .setLabel('Revoke Approval')
-      .setID(interactionID(context, 'revoke', ...revokeData))
-      .setStyle('gray')
+      .setCustomId(interactionID(context, 'revoke', ...revokeData))
+      .setStyle('SECONDARY')
       .setDisabled(disabled)
 
     const cancel = new MessageButton()
       .setLabel('Cancel')
-      .setID(interactionID(context, 'cancel', ...cancelData))
-      .setStyle('red')
+      .setCustomId(interactionID(context, 'cancel', ...cancelData))
+      .setStyle('DANGER')
       .setDisabled(disabled)
 
-    return [approve, revoke, cancel]
+      const row = new MessageActionRow().addComponents(approve, revoke, cancel)
+      return row
   }
