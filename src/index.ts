@@ -166,7 +166,7 @@ const sweepCache = async () => {
 
   const guild = await client.guilds.fetch(GUILD_ID)
   const swept = guild.members.cache.sweep(
-    member => member.roles.highest.id === guild.id
+    member => member.roles.cache.size === 1
   )
 
   logger.info(field('action', 'sweep-members'), field('swept', swept))
