@@ -117,9 +117,9 @@ client.on('interactionCreate', async button => {
     //   await vote__approve(parameters)
     //   break
 
-    // case 'vote@cancel':
-    //   await vote__cancel(parameters)
-    //   break
+    case 'vote@cancel':
+      await vote__cancel(parameters)
+      break
 
     // case 'vote@revoke':
     //   await vote__revoke(parameters)

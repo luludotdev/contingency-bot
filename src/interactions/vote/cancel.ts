@@ -2,14 +2,19 @@ import { field } from '@lolpants/jogger'
 import { Colours, VoteResult } from '~constants.js'
 import type { Handler } from '~interactions/index.js'
 import { logger } from '~logger.js'
+import { resolveMessage } from '~utils.js'
 import { cancelVote } from './utils.js'
 
 export const vote__cancel: Handler = async ({ manager, button }) => {
+  if (!button.guild) return
+  if (!button.channel) return
+
+  const message = await resolveMessage(button.channel, button.message, true)
   const messageID = button.message.id
   const vote = manager.getVote(messageID)
 
   if (vote === undefined) {
-    const embed = button.message.embeds[0]
+    const embed = message.embeds[0]
     embed.setDescription(`~~${embed.description}~~\n**${VoteResult.EXPIRED}**`)
     embed.setColor(Colours.GREY)
 
@@ -17,21 +22,23 @@ export const vote__cancel: Handler = async ({ manager, button }) => {
     return
   }
 
-  if (!vote.isInitiator(button.clicker.member)) {
-    await button.reply.send(
-      'Only the user who started the vote can cancel.',
-      // @ts-expect-error
-      true
-    )
+  const member = button.guild.members.cache.get(button.user.id)
+  if (!member) return
+
+  if (!vote.isInitiator(member)) {
+    await button.reply({
+      content: 'Only the user who started the vote can cancel.',
+      ephemeral: true,
+    })
 
     return
   }
 
-  const embed = button.message.embeds[0]
+  const embed = message.embeds[0]
   embed.setDescription(`~~${embed.description}~~\n**${VoteResult.CANCELLED}**`)
   embed.setColor(Colours.GREY)
 
-  vote.cancel(button.clicker.member)
+  vote.cancel(member)
   await cancelVote(button, embed)
 
   logger.info(
