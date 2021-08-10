@@ -18,6 +18,7 @@ export const enum VoteResult {
 
 export const enum Reply {
   ALREADY_VOTED = 'You have already voted!',
+  HELP_SENT = 'Help sent!',
   NOT_VOTED = 'You have not voted!',
   VOTE_CANCELLED = 'Vote Cancelled.',
   ERR_DMS_CLOSED = 'Could not send help in DMs! Adjust your privacy settings and try again.',

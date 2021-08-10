@@ -8,6 +8,10 @@ export const help: Command = async ({ message }) => {
 
   try {
     await message.author.send({ embeds: [embed] })
+    await message.reply({
+      content: Reply.HELP_SENT,
+      allowedMentions: { repliedUser: false },
+    })
   } catch {
     await message.reply(Reply.ERR_DMS_CLOSED)
   }
