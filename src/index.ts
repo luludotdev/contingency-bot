@@ -2,13 +2,15 @@ import 'source-map-support/register.js'
 
 import { field } from '@lolpants/jogger'
 import { Client, Intents } from 'discord.js'
-import { Colours, DRY_RUN_RICH, Reply, VoteResult } from '~constants.js'
+import type { CommandParameters } from '~commands/index.js'
+import { startVote } from '~commands/startVote.js'
+import { Colours, VoteResult } from '~constants.js'
 import { GUILD_ID, TOKEN } from '~env/index.js'
 import type { HandlerParameters } from '~interactions/index.js'
 import { parseInteractionID } from '~interactions/index.js'
 import { init__cancel } from '~interactions/init/cancel.js'
 import { init__confirm } from '~interactions/init/confirm.js'
-import { generateEmbed, generateInitButtons } from '~interactions/init/utils.js'
+import { generateEmbed } from '~interactions/init/utils.js'
 import { vote__approve } from '~interactions/vote/approve.js'
 import { vote__cancel } from '~interactions/vote/cancel.js'
 import { vote__revoke } from '~interactions/vote/revoke.js'
@@ -46,50 +48,39 @@ client.on('messageCreate', async message => {
   if (message.guild.id !== GUILD_ID) return
   if (manager.canInitiate(message.member) === false) return
 
-  const prefix = 'c!startvote '
+  const prefix = 'c!'
   if (!message.content.toLowerCase().startsWith(prefix)) return
 
-  const content = message.content.slice(prefix.length)
-  const targetID = content.replace(/<@!?(\d+)>/, '$1')
+  const [command, ...contentArray] = message.content
+    .slice(prefix.length)
+    .split(' ')
 
-  const target = message.guild.members.resolve(targetID)
-  if (target === null) {
-    await message.reply(Reply.ERR_UNKNOWN_USER)
-    return
+  if (command === '') return
+  const content = contentArray.join(' ')
+
+  const parameters: CommandParameters = {
+    message,
+    guild: message.guild,
+    content,
+    client,
+    manager,
   }
 
-  if (target.id === client.user?.id) {
-    await message.reply(Reply.ERR_IS_BOT)
-    return
+  switch (command.toLowerCase()) {
+    case 'startvote':
+      await startVote(parameters)
+      break
+
+    default: {
+      logger.debug(
+        field('event', 'messageCreate'),
+        field('command', command.toLowerCase()),
+        field('error', 'unhandled command')
+      )
+
+      break
+    }
   }
-
-  if (target.id === message.author.id) {
-    await message.reply(Reply.ERR_IS_SELF)
-    return
-  }
-
-  const botRolePosition = message.guild.me?.roles.highest.position ?? -1
-  const targetRolePosition = target.roles.highest.position
-  if (botRolePosition <= targetRolePosition) {
-    await message.reply(Reply.ERR_TARGET_HIGHER)
-    return
-  }
-
-  const inProgress = manager.voteInProgress(target)
-  if (inProgress !== undefined) {
-    await message.reply(`${Reply.ERR_IN_PROGRESS}\n${inProgress.message.url}`)
-    return
-  }
-
-  const buttons = generateInitButtons({
-    confirmData: [message.author.id, target.id],
-    cancelData: [message.author.id, message.id],
-  })
-
-  await message.channel.send({
-    content: `${DRY_RUN_RICH}Are you sure you want to start a vote against \`${target.user.tag}\`?`,
-    components: [buttons],
-  })
 })
 
 client.on('interactionCreate', async button => {

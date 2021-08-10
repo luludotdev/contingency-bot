@@ -25,6 +25,7 @@ export const enum Reply {
   ERR_IS_BOT = 'You cannot start a vote against this bot!',
   ERR_IS_SELF = 'You cannot start a vote against yourself!',
   ERR_IS_TARGET = 'You may not approve as you are the target of this vote.',
+  ERR_NO_ID = 'You must specify a target user.',
   ERR_NO_PERM = 'You are not allowed to do that.',
   ERR_NOT_INITIATOR = 'Only the user who started the vote can confirm or cancel.',
   ERR_TARGET_HIGHER = 'Could not start a vote against that user due to role positions.',

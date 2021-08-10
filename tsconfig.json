@@ -17,6 +17,7 @@
     "importHelpers": true,
     "baseUrl": "./src",
     "paths": {
+      "~commands/*": ["commands/*"],
       "~env/*": ["env/*"],
       "~constants.js": ["constants.js"],
       "~interactions/*": ["interactions/*"],
