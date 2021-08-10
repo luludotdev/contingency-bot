@@ -155,43 +155,42 @@ client.on('interactionCreate', async button => {
 //   )
 // })
 
-// const interval = setInterval(async () => {
-//   // Wait for client to be ready
-//   if (client.readyAt === null) return
+const interval = setInterval(async () => {
+  // Wait for client to be ready
+  if (client.readyAt === null) return
 
-//   const expired = manager.getExpired()
-//   if (expired.length === 0) return
+  const expired = manager.getExpired()
+  if (expired.length === 0) return
 
-//   logger.info(
-//     field('action', 'sweep-expired'),
-//     field('expired-count', expired.length)
-//   )
+  logger.info(
+    field('action', 'sweep-expired'),
+    field('expired-count', expired.length)
+  )
 
-//   for (const vote of expired) {
-//     const embed = vote.message.embeds[0]
-//     embed.setDescription(`~~${embed.description}~~\n**${VoteResult.EXPIRED}**`)
-//     embed.setColor(Colours.GREY)
+  for (const vote of expired) {
+    const embed = vote.message.embeds[0]
+    embed.setDescription(`~~${embed.description}~~\n**${VoteResult.EXPIRED}**`)
+    embed.setColor(Colours.GREY)
 
-//     const buttons = generateVoteButtons({ disabled: true })
+    const buttons = generateVoteButtons({ disabled: true })
 
-//     // eslint-disable-next-line no-await-in-loop
-//     await vote.message.edit({
-//       embed,
-//       // @ts-expect-error
-//       buttons,
-//     })
+    // eslint-disable-next-line no-await-in-loop
+    await vote.message.edit({
+      embeds: [embed],
+      components: [buttons],
+    })
 
-//     vote.cancel(null)
-//     logger.info(
-//       field('context', 'vote'),
-//       field('action', 'expired'),
-//       field('id', vote.message.id)
-//     )
-//   }
-// }, 1000 * 60)
+    vote.cancel(null)
+    logger.info(
+      field('context', 'vote'),
+      field('action', 'expired'),
+      field('id', vote.message.id)
+    )
+  }
+}, 1000 * 60)
 
 exitHook(async (exit, error) => {
-  // clearInterval(interval)
+  clearInterval(interval)
   client.destroy()
 
   if (error) {
