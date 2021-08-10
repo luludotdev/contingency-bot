@@ -44,7 +44,6 @@ export const init__confirm: Handler = async ({
   const mentions = generateMentions(button.guild.roles, target).join(' ')
   const message = await button.channel.send({ content: mentions })
 
-
   const initiator = button.guild.members.cache.get(button.user.id)!
   const vote = manager.startVote(message, initiator, target)
 

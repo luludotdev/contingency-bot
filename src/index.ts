@@ -18,7 +18,13 @@ import { createManager } from '~manager.js'
 import { exitHook } from './exit.js'
 
 const manager = createManager()
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS]})
+const client = new Client({
+  intents: [
+    Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.GUILD_MEMBERS,
+  ],
+})
 
 client.on('ready', async () => {
   logger.info(
@@ -70,10 +76,7 @@ client.on('messageCreate', async message => {
 
   const inProgress = manager.voteInProgress(target)
   if (inProgress !== undefined) {
-    await message.reply(
-      `${Reply.ERR_IN_PROGRESS}\n${inProgress.message.url}`
-    )
-
+    await message.reply(`${Reply.ERR_IN_PROGRESS}\n${inProgress.message.url}`)
     return
   }
 
@@ -82,7 +85,10 @@ client.on('messageCreate', async message => {
     cancelData: [message.author.id, message.id],
   })
 
-  await message.channel.send({ content: `${DRY_RUN_RICH}Are you sure you want to start a vote against \`${target.user.tag}\`?`, components: [buttons] })
+  await message.channel.send({
+    content: `${DRY_RUN_RICH}Are you sure you want to start a vote against \`${target.user.tag}\`?`,
+    components: [buttons],
+  })
 })
 
 client.on('interactionCreate', async button => {
@@ -144,7 +150,11 @@ client.on('messageDelete', async message => {
 
   const mentions = vote.mentions.join(' ')
   const buttons = generateVoteButtons({ cancelData: [vote.initiator.id] })
-  const newMessage = await message.channel.send({ content: mentions, embeds: [embed], components: [buttons] })
+  const newMessage = await message.channel.send({
+    content: mentions,
+    embeds: [embed],
+    components: [buttons],
+  })
 
   vote.replaceMessage(newMessage)
   logger.info(

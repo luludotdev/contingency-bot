@@ -165,7 +165,7 @@ const createVote: (
     },
 
     get mentions() {
-      const guild = message.guild
+      const { guild } = message
       if (guild === null) throw new Error('guild is null')
 
       return generateMentions(guild.roles, target)

@@ -1,10 +1,13 @@
-import { MessageEmbed, MessageButton, MessageActionRow } from 'discord.js'
+import { MessageActionRow, MessageButton, MessageEmbed } from 'discord.js'
 import type { ButtonInteraction, ColorResolvable } from 'discord.js'
 import { Colours, DRY_RUN_PREFIX, Reply } from '~constants.js'
 import { interactionID } from '~interactions/index.js'
 import { sleepMS } from '~utils.js'
 
-export const checkUserID = async (button: ButtonInteraction, userID: string) => {
+export const checkUserID = async (
+  button: ButtonInteraction,
+  userID: string
+) => {
   if (button.user.id !== userID) {
     await button.reply({ content: Reply.ERR_NOT_INITIATOR, ephemeral: true })
     return false
@@ -33,29 +36,30 @@ interface InitButtonOptions {
   cancelData?: string[]
 }
 
-export const generateInitButtons: (options: InitButtonOptions) => MessageActionRow =
-  options => {
-    const disabled = options.disabled ?? false
-    const context = disabled ? 'dummy' : 'init'
+export const generateInitButtons: (
+  options: InitButtonOptions
+) => MessageActionRow = options => {
+  const disabled = options.disabled ?? false
+  const context = disabled ? 'dummy' : 'init'
 
-    const confirmData = options.confirmData ?? []
-    const cancelData = options.cancelData ?? []
+  const confirmData = options.confirmData ?? []
+  const cancelData = options.cancelData ?? []
 
-    const confirm = new MessageButton()
-      .setLabel('Confirm')
-      .setCustomId(interactionID(context, 'confirm', ...confirmData))
-      .setStyle('SUCCESS')
-      .setDisabled(disabled)
+  const confirm = new MessageButton()
+    .setLabel('Confirm')
+    .setCustomId(interactionID(context, 'confirm', ...confirmData))
+    .setStyle('SUCCESS')
+    .setDisabled(disabled)
 
-    const cancel = new MessageButton()
-      .setLabel('Cancel')
-      .setCustomId(interactionID(context, 'cancel', ...cancelData))
-      .setStyle('DANGER')
-      .setDisabled(disabled)
+  const cancel = new MessageButton()
+    .setLabel('Cancel')
+    .setCustomId(interactionID(context, 'cancel', ...cancelData))
+    .setStyle('DANGER')
+    .setDisabled(disabled)
 
-    const row = new MessageActionRow().addComponents(confirm, cancel)
-    return row
-  }
+  const row = new MessageActionRow().addComponents(confirm, cancel)
+  return row
+}
 
 interface EmbedOptions {
   description: string
