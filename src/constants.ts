@@ -1,5 +1,7 @@
 import { DRY_RUN } from '~env/index.js'
 
+export const PREFIX = 'c!'
+
 export const enum Colours {
   GREEN = 0x3b_a5_5d,
   GREY = 0x4f_54_5c,

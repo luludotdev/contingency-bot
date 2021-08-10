@@ -5,7 +5,7 @@ import { Client, Intents } from 'discord.js'
 import { help } from '~commands/help.js'
 import type { CommandParameters } from '~commands/index.js'
 import { startVote } from '~commands/startVote.js'
-import { Colours, VoteResult } from '~constants.js'
+import { Colours, PREFIX, VoteResult } from '~constants.js'
 import { GUILD_ID, TOKEN } from '~env/index.js'
 import type { HandlerParameters } from '~interactions/index.js'
 import { parseInteractionID } from '~interactions/index.js'
@@ -49,11 +49,9 @@ client.on('messageCreate', async message => {
   if (message.guild.id !== GUILD_ID) return
   if (manager.canInitiate(message.member) === false) return
 
-  const prefix = 'c!'
-  if (!message.content.toLowerCase().startsWith(prefix)) return
-
+  if (!message.content.toLowerCase().startsWith(PREFIX)) return
   const [command, ...contentArray] = message.content
-    .slice(prefix.length)
+    .slice(PREFIX.length)
     .split(' ')
 
   if (command === '') return
