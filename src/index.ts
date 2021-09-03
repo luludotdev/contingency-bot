@@ -169,7 +169,7 @@ const sweepCache = async () => {
     member => member.roles.cache.size === 1
   )
 
-  logger.info(field('action', 'sweep-members'), field('swept', swept))
+  logger.debug(field('action', 'sweep-members'), field('swept', swept))
 }
 
 const expireInterval = setInterval(async () => {
