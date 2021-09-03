@@ -88,6 +88,7 @@ client.on('messageCreate', async message => {
 
 client.on('interactionCreate', async button => {
   if (!button.isButton()) return
+  if (button.guildId !== GUILD_ID) return
 
   const interaction = parseInteractionID(button.customId)
   const { key, components } = interaction
