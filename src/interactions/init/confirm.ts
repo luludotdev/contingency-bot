@@ -49,7 +49,7 @@ export const init__confirm: Handler = async ({
   })
 
   const initiator = button.guild.members.cache.get(button.user.id)!
-  const vote = manager.startVote(message, initiator, target)
+  const vote = await manager.startVote(message, initiator, target)
 
   logger.info(
     field('context', 'vote'),

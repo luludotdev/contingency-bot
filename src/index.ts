@@ -142,7 +142,7 @@ client.on('messageDelete', async message => {
     votes: vote.voterList,
   })
 
-  const mentions = vote.mentions.join(' ')
+  const mentions = (await vote.mentions()).join(' ')
   const buttons = generateVoteButtons({ cancelData: [vote.initiator.id] })
   const newMessage = await message.channel.send({
     content: mentions,
