@@ -18,7 +18,7 @@ import { vote__revoke } from '~interactions/vote/revoke.js'
 import { generateVoteButtons } from '~interactions/vote/utils.js'
 import { errorField, flush, logger } from '~logger.js'
 import { createManager } from '~manager.js'
-import { sweepCache } from '~utils.js'
+import { sweepCache, syncMembers } from '~utils.js'
 import { exitHook } from './exit.js'
 
 const manager = createManager()
@@ -36,10 +36,7 @@ client.on('ready', async () => {
     field('user', client.user?.tag ?? 'Unknown')
   )
 
-  const guild = await client.guilds.fetch(GUILD_ID)
-  const members = await guild.members.fetch({ limit: 500_000 })
-  logger.info(field('action', 'sync-members'), field('members', members.size))
-
+  await syncMembers(client)
   await sweepCache(client)
 })
 

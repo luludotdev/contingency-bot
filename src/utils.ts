@@ -63,6 +63,15 @@ export const sweepCache: (client: Client) => Promise<number> = async client => {
   return swept
 }
 
+export const syncMembers: (client: Client, limit?: number) => Promise<number> =
+  async (client, limit = 500_000) => {
+    const guild = await client.guilds.fetch(GUILD_ID)
+    const members = await guild.members.fetch({ limit })
+
+    logger.info(field('action', 'sync-members'), field('members', members.size))
+    return members.size
+  }
+
 export const generateMentions: (
   roles: RoleManager,
   target: GuildMember
