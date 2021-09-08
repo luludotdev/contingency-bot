@@ -41,6 +41,7 @@ export const init__confirm: Handler = async ({
   const btnMessage = await resolveMessage(button.channel, button.message, true)
   await btnMessage.delete()
 
+  await button.channel.sendTyping()
   const mentionsArray = await generateMentions(button.guild.roles, target)
   const mentions = mentionsArray.join(' ')
 
