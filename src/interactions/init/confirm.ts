@@ -41,7 +41,9 @@ export const init__confirm: Handler = async ({
   const btnMessage = await resolveMessage(button.channel, button.message, true)
   await btnMessage.delete()
 
-  const mentions = generateMentions(button.guild.roles, target).join(' ')
+  const mentionsArray = await generateMentions(button.guild.roles, target)
+  const mentions = mentionsArray.join(' ')
+
   const message = await button.channel.send({
     content: `**EMERGENCY ALERT:** ${mentions}`,
   })

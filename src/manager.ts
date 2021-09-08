@@ -3,7 +3,12 @@ import { MAX_VOTE_LIFETIME, TARGET_SCORE, VOTING_WEIGHT } from '~env/index.js'
 import { generateMentions, sortMembersByWeight, voteWeight } from '~utils.js'
 
 export interface Manager {
-  startVote(message: Message, initiator: GuildMember, target: GuildMember): Vote
+  startVote(
+    message: Message,
+    initiator: GuildMember,
+    target: GuildMember
+  ): Promise<Vote>
+
   cancelVote(messageID: string): boolean
   replaceVote(oldMessageID: string, newMessageID: string): void
 
@@ -27,8 +32,6 @@ export interface Vote {
   get voterList(): string
   get progress(): string
 
-  get mentions(): string[]
-
   approve(member: GuildMember): void
   revoke(member: GuildMember): void
   hasVoted(member: GuildMember): boolean
@@ -39,19 +42,21 @@ export interface Vote {
 
   cancel(member: GuildMember | null): void
   replaceMessage(newMessage: Message): void
+
+  mentions(): Promise<string[]>
 }
 
 export const createManager: () => Manager = () => {
   const votes: Map<string, Vote> = new Map()
 
   return {
-    startVote(message, initiator, target) {
+    async startVote(message, initiator, target) {
       if (!this.canInitiate(initiator)) throw new Error('not allowed')
       if (votes.has(message.id)) {
         throw new Error(`vote already exists for message \`${message.id}\``)
       }
 
-      const vote = createVote(message, initiator, target, this)
+      const vote = await createVote(message, initiator, target, this)
       votes.set(message.id, vote)
 
       return vote
@@ -105,7 +110,7 @@ const createVote: (
   initiator: GuildMember,
   target: GuildMember,
   manager: Manager
-) => Vote = (_message, _initiator, _target, _manager) => {
+) => Promise<Vote> = async (_message, _initiator, _target, _manager) => {
   const startedAt = new Date()
   let message = _message
 
@@ -117,7 +122,7 @@ const createVote: (
   const votes: VotesMap = new Map()
   votes.set(initiator.id, [initiator, voteWeight(initiator)])
 
-  return {
+  const vote: Vote = {
     // #region Getters
     get message() {
       return message
@@ -163,13 +168,6 @@ const createVote: (
 
       return `${this.score} / ${TARGET_SCORE} (${percentString}%)`
     },
-
-    get mentions() {
-      const { guild } = message
-      if (guild === null) throw new Error('guild is null')
-
-      return generateMentions(guild.roles, target)
-    },
     // #endregion
 
     // #region Methods
@@ -214,6 +212,15 @@ const createVote: (
 
       manager.replaceVote(oldID, newMessage.id)
     },
+
+    async mentions() {
+      const { guild } = message
+      if (guild === null) throw new Error('guild is null')
+
+      return generateMentions(guild.roles, target)
+    },
     // #endregion
   }
+
+  return vote
 }

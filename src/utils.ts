@@ -75,7 +75,18 @@ export const syncMembers: (client: Client, limit?: number) => Promise<number> =
 export const generateMentions: (
   roles: RoleManager,
   target: GuildMember
-) => string[] = (roles, target) => {
+) => Promise<string[]> = async (roles, target) => {
+  try {
+    await syncMembers(roles.client)
+    await sweepCache(roles.client)
+  } catch {
+    // Warn but continue
+    logger.warn(
+      field('action', 'mentions'),
+      field('message', 'Failed to sync and sweep members!')
+    )
+  }
+
   const members: GuildMember[] = []
   for (const roleID of ROLE_WEIGHTS.keys()) {
     const role = roles.resolve(roleID)
