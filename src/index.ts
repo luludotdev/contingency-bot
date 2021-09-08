@@ -18,6 +18,7 @@ import { vote__revoke } from '~interactions/vote/revoke.js'
 import { generateVoteButtons } from '~interactions/vote/utils.js'
 import { errorField, flush, logger } from '~logger.js'
 import { createManager } from '~manager.js'
+import { sweepCache } from '~utils.js'
 import { exitHook } from './exit.js'
 
 const manager = createManager()
@@ -39,7 +40,7 @@ client.on('ready', async () => {
   const members = await guild.members.fetch({ limit: 500_000 })
   logger.info(field('action', 'sync-members'), field('members', members.size))
 
-  await sweepCache()
+  await sweepCache(client)
 })
 
 client.on('messageCreate', async message => {
@@ -161,18 +162,6 @@ client.on('messageDelete', async message => {
   )
 })
 
-const sweepCache = async () => {
-  // Wait for client to be ready
-  if (client.readyAt === null) return
-
-  const guild = await client.guilds.fetch(GUILD_ID)
-  const swept = guild.members.cache.sweep(
-    member => member.roles.cache.size === 1
-  )
-
-  logger.debug(field('action', 'sweep-members'), field('swept', swept))
-}
-
 const expireInterval = setInterval(async () => {
   // Wait for client to be ready
   if (client.readyAt === null) return
@@ -207,8 +196,11 @@ const expireInterval = setInterval(async () => {
   }
 }, 1000 * 60)
 
-const sweepInterval = setInterval(() => {
-  void sweepCache()
+const sweepInterval = setInterval(async () => {
+  // Wait for client to be ready
+  if (client.readyAt === null) return
+
+  await sweepCache(client)
 }, 1000 * 90)
 
 exitHook(async (exit, error) => {

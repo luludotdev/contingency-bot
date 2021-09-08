@@ -1,7 +1,9 @@
+import { field } from '@lolpants/jogger'
 import type { APIMessage } from 'discord-api-types'
-import { Message } from 'discord.js'
+import { Client, Message } from 'discord.js'
 import type { GuildMember, RoleManager, TextBasedChannels } from 'discord.js'
-import { ROLE_WEIGHTS } from '~env/index.js'
+import { GUILD_ID, ROLE_WEIGHTS } from '~env/index.js'
+import { logger } from '~logger.js'
 
 export const sleepMS: (ms: number) => Promise<void> = async ms =>
   new Promise(resolve => {
@@ -50,6 +52,16 @@ export const sortMembersByWeight: (a: MemberWeight, b: MemberWeight) => number =
       : weight_a < weight_b
       ? 1
       : member_a.user.username.localeCompare(member_b.user.username)
+
+export const sweepCache: (client: Client) => Promise<number> = async client => {
+  const guild = await client.guilds.fetch(GUILD_ID)
+  const swept = guild.members.cache.sweep(
+    member => member.roles.cache.size === 1
+  )
+
+  logger.debug(field('action', 'sweep-members'), field('swept', swept))
+  return swept
+}
 
 export const generateMentions: (
   roles: RoleManager,
