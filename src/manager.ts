@@ -43,7 +43,7 @@ export interface Vote {
   cancel(member: GuildMember | null): void
   replaceMessage(newMessage: Message): void
 
-  mentions(): Promise<string[]>
+  mentions(sync?: boolean): Promise<string[]>
 }
 
 export const createManager: () => Manager = () => {
@@ -213,11 +213,11 @@ const createVote: (
       manager.replaceVote(oldID, newMessage.id)
     },
 
-    async mentions() {
+    async mentions(sync = true) {
       const { guild } = message
       if (guild === null) throw new Error('guild is null')
 
-      return generateMentions(guild.roles, target)
+      return generateMentions(guild.roles, target, sync)
     },
     // #endregion
   }

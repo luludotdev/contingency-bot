@@ -74,11 +74,14 @@ export const syncMembers: (client: Client, limit?: number) => Promise<number> =
 
 export const generateMentions: (
   roles: RoleManager,
-  target: GuildMember
-) => Promise<string[]> = async (roles, target) => {
+  target: GuildMember,
+  sync?: boolean
+) => Promise<string[]> = async (roles, target, sync = true) => {
   try {
-    await syncMembers(roles.client)
-    await sweepCache(roles.client)
+    if (sync) {
+      await syncMembers(roles.client)
+      await sweepCache(roles.client)
+    }
   } catch {
     // Warn but continue
     logger.warn(
