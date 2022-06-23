@@ -11,13 +11,22 @@
     "node": ">=16.6.0"
   },
   "scripts": {
-    "clean": "rimraf build",
+    "test": "yarn run check && yarn run lint",
+    "check": "yarn run compile --noEmit",
+    "lint": "xo ./src",
     "compile": "ttsc",
-    "dev": "yarn run compile --watch",
-    "predev": "yarn run clean",
-    "debug": "nodemon --watch build --inspect",
-    "build": "yarn run compile",
-    "prebuild": "yarn run clean",
-    "lint": "xo ./src"
+    "clean": "rimraf build",
+    "build": "yarn run clean && yarn run compile",
+    "dev": "yarn run clean && yarn run compile --watch",
+    "debug": "nodemon --watch build --inspect"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "nodemon": "^2.0.16",
+    "rimraf": "^3.0.2",
+    "ttypescript": "^1.5.13",
+    "typescript": "^4.7.4",
+    "typescript-transform-paths": "^3.3.1",
+    "xo": "^0.50.0"
   }
 }
