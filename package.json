@@ -1,6 +1,6 @@
 {
   "name": "contingency-bot",
-  "version": "0.1.0",
+  "packageManager": "yarn@3.2.1",
   "type": "module",
   "main": "./build/index.js",
   "repository": "git@github.com:lolPants/contingency-bot.git",
@@ -19,8 +19,5 @@
     "build": "yarn run compile",
     "prebuild": "yarn run clean",
     "lint": "xo ./src"
-  },
-  "devDependencies": {},
-  "dependencies": {},
-  "optionalDependencies": {}
+  }
 }
