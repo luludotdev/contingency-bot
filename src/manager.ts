@@ -40,7 +40,7 @@ export interface Vote {
   isTarget(member: GuildMember): boolean
   canVote(member: GuildMember): boolean
 
-  cancel(member: GuildMember | null): void
+  cancel(member: GuildMember | undefined): void
   replaceMessage(newMessage: Message): void
 
   mentions(sync?: boolean): Promise<string[]>

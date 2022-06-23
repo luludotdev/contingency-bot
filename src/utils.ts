@@ -45,13 +45,15 @@ export const voteWeight: (member: GuildMember) => number = member => {
 }
 
 type MemberWeight = [member: GuildMember, weight: number]
-export const sortMembersByWeight: (a: MemberWeight, b: MemberWeight) => number =
-  ([member_a, weight_a], [member_b, weight_b]) =>
-    weight_a > weight_b
-      ? -1
-      : weight_a < weight_b
-      ? 1
-      : member_a.user.username.localeCompare(member_b.user.username)
+export const sortMembersByWeight: (
+  a: MemberWeight,
+  b: MemberWeight
+) => number = ([member_a, weight_a], [member_b, weight_b]) =>
+  weight_a > weight_b
+    ? -1
+    : weight_a < weight_b
+    ? 1
+    : member_a.user.username.localeCompare(member_b.user.username)
 
 export const sweepCache: (client: Client) => Promise<number> = async client => {
   const guild = await client.guilds.fetch(GUILD_ID)
@@ -63,14 +65,16 @@ export const sweepCache: (client: Client) => Promise<number> = async client => {
   return swept
 }
 
-export const syncMembers: (client: Client, limit?: number) => Promise<number> =
-  async (client, limit = 500_000) => {
-    const guild = await client.guilds.fetch(GUILD_ID)
-    const members = await guild.members.fetch({ limit })
+export const syncMembers: (
+  client: Client,
+  limit?: number
+) => Promise<number> = async (client, limit = 500_000) => {
+  const guild = await client.guilds.fetch(GUILD_ID)
+  const members = await guild.members.fetch({ limit })
 
-    logger.info(field('action', 'sync-members'), field('members', members.size))
-    return members.size
-  }
+  logger.info(field('action', 'sync-members'), field('members', members.size))
+  return members.size
+}
 
 export const generateMentions: (
   roles: RoleManager,
