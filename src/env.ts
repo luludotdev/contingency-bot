@@ -8,6 +8,12 @@ export const env = defineEnvironment({
   DEBUG_LOGS: t.bool(),
   GIT_VERSION: t.string(),
   // #endregion
+
+  // #region Bot
+  TOKEN: t.string().required(),
+  GUILD_ID: t.string().required(),
+  DRY_RUN: t.bool().default(false),
+  // #endregion
 })
 
 const IS_PROD = env.NODE_ENV?.toLowerCase() === 'production'

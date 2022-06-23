@@ -30,8 +30,13 @@
     "xo": "^0.50.0"
   },
   "dependencies": {
+    "@discordx/importer": "^1.1.10",
+    "@discordx/utilities": "^4.3.3",
     "@lolpants/env": "^0.4.0",
     "@lolpants/exit": "^0.1.0",
-    "@lolpants/jogger": "^0.6.0"
+    "@lolpants/jogger": "^0.6.0",
+    "discord.js": "^13.8.0",
+    "discordx": "^9.7.3",
+    "execa": "^6.1.0"
   }
 }
