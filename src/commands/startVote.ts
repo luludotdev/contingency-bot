@@ -1,7 +1,7 @@
 import { type CommandInteraction, type GuildMember, User } from 'discord.js'
 import { Discord, Slash, SlashOption } from 'discordx'
-import { DRY_RUN_RICH, Reply } from '~/constants.js'
 import { generateInitButtons } from '~/lib/buttons.js'
+import { DRY_RUN_RICH, Reply } from '~/lib/constants.js'
 import { manager } from '~/lib/manager.js'
 
 @Discord()

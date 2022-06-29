@@ -6,7 +6,7 @@ import {
   type MessageEmbed,
 } from 'discord.js'
 import { ButtonComponent, Discord } from 'discordx'
-import { Colours, Reply, VoteResult } from '~/constants.js'
+import { Colours, Reply, VoteResult } from '~/lib/constants.js'
 import { env } from '~/env.js'
 import { generateVoteButtons } from '~/lib/buttons.js'
 import { interactionRX } from '~/lib/interactions.js'

@@ -1,5 +1,5 @@
 import { type ColorResolvable, MessageEmbed } from 'discord.js'
-import { Colours, DRY_RUN_PREFIX } from '~/constants.js'
+import { Colours, DRY_RUN_PREFIX } from '~/lib/constants.js'
 
 interface EmbedOptions {
   description: string

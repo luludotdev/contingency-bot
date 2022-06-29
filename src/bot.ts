@@ -5,13 +5,13 @@ import { Intents } from 'discord.js'
 import { Client } from 'discordx'
 import ms from 'ms'
 import { join as joinPath } from 'node:path/posix'
-import { Colours, VoteResult } from '~/constants.js'
+import { Colours, VoteResult } from '~/lib/constants.js'
 import { env, IS_DEV } from '~/env.js'
 import { generateVoteButtons } from '~/lib/buttons.js'
 import { manager } from '~/lib/manager.js'
+import { getVersion } from '~/lib/version.js'
 import { sweepCache, syncMembers } from '~/lib/vote/utils.js'
 import { ctxField, logger, userField } from '~/logger.js'
-import { getVersion } from '~/version.js'
 
 const client = new Client({
   silent: true,
