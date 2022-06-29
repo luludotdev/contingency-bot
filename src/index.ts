@@ -3,9 +3,12 @@ import 'reflect-metadata'
 
 import { exitHook } from '@lolpants/exit'
 import { field } from '@lolpants/jogger'
+import { env } from '~/env.js'
 import { errorField, flush, logger } from '~/logger.js'
 
 const boot = async () => {
+  env.validate()
+
   const { run } = await import('./bot.js')
   await run()
 }
