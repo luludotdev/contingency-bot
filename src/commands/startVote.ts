@@ -1,7 +1,8 @@
 import { type CommandInteraction, type GuildMember, User } from 'discord.js'
 import { Discord, Slash, SlashOption } from 'discordx'
-import { manager } from '~/bot.js'
-import { Reply } from '~/constants.js'
+import { DRY_RUN_RICH, Reply } from '~/constants.js'
+import { generateInitButtons } from '~/lib/buttons.js'
+import { manager } from '~/lib/manager.js'
 
 @Discord()
 export abstract class StartVote {
@@ -68,7 +69,17 @@ export abstract class StartVote {
       return
     }
 
-    // TODO
-    void 0
+    const buttons = generateInitButtons({
+      confirmData: [ctx.user.id, target.id],
+      cancelData: [ctx.user.id], // TODO: message.id
+    })
+
+    const dryRunText = DRY_RUN_RICH()
+    const content = `${dryRunText}Are you sure you want to start a vote against \`${target.user.tag}\`?`
+
+    await ctx.reply({
+      content,
+      components: [buttons],
+    })
   }
 }
