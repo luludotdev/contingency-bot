@@ -129,12 +129,5 @@ export abstract class InitButtons {
     }
 
     await cancelConfirmation(button, Reply.VOTE_CANCELLED, 1500)
-
-    try {
-      const message = await button.channel.messages.fetch(messageID)
-      if (message?.deletable) await message.delete()
-    } catch {
-      // No-op
-    }
   }
 }

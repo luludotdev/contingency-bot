@@ -71,7 +71,7 @@ export abstract class StartVote {
 
     const buttons = generateInitButtons({
       confirmData: [ctx.user.id, target.id],
-      cancelData: [ctx.user.id], // TODO: message.id
+      cancelData: [ctx.user.id],
     })
 
     const dryRunText = DRY_RUN_RICH()
