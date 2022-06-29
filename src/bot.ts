@@ -5,12 +5,10 @@ import { Intents } from 'discord.js'
 import { Client } from 'discordx'
 import { join as joinPath } from 'node:path/posix'
 import { env, IS_DEV } from '~/env.js'
+import { sweepCache, syncMembers } from '~/lib/vote/utils.js'
 import { ctxField, logger, userField } from '~/logger.js'
 import { getVersion } from '~/version.js'
-import { sweepCache, syncMembers } from '~/vote/utils.js'
-import { createManager } from './vote/manager.js'
 
-export const manager = createManager()
 const client = new Client({
   silent: true,
   intents: [
@@ -50,7 +48,7 @@ export const run = async () => {
 
   const imports = joinPath(
     dirname(import.meta.url).replaceAll('\\', '/'),
-    '/{handlers,commands}/**/*.{ts,js}'
+    '/{commands,handlers,interactions}/**/*.{ts,js}'
   )
 
   await importx(imports)
