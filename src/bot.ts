@@ -7,6 +7,7 @@ import { join as joinPath } from 'node:path/posix'
 import { env, IS_DEV } from '~/env.js'
 import { ctxField, logger, userField } from '~/logger.js'
 import { getVersion } from '~/version.js'
+import { sweepCache, syncMembers } from '~/vote/utils.js'
 
 const client = new Client({
   silent: true,
@@ -28,6 +29,9 @@ client.once('ready', async () => {
     userField('user', client.user!),
     field('guild', field('id', env.GUILD_ID), field('name', guild.name))
   )
+
+  await syncMembers(client)
+  await sweepCache(client)
 })
 
 client.on('interactionCreate', interaction => {
