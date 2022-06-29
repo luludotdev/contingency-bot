@@ -3,8 +3,12 @@ import { exitHook } from '@lolpants/exit'
 import { field } from '@lolpants/jogger'
 import { Intents } from 'discord.js'
 import { Client } from 'discordx'
+import ms from 'ms'
 import { join as joinPath } from 'node:path/posix'
+import { Colours, VoteResult } from '~/constants.js'
 import { env, IS_DEV } from '~/env.js'
+import { generateVoteButtons } from '~/lib/buttons.js'
+import { manager } from '~/lib/manager.js'
 import { sweepCache, syncMembers } from '~/lib/vote/utils.js'
 import { ctxField, logger, userField } from '~/logger.js'
 import { getVersion } from '~/version.js'
@@ -55,7 +59,51 @@ export const run = async () => {
   await client.login(env.TOKEN)
 }
 
+const expireInterval = setInterval(async () => {
+  // Wait for client to be ready
+  if (client.readyAt === null) return
+
+  const expired = manager.getExpired()
+  if (expired.length === 0) return
+
+  logger.info(
+    field('action', 'sweep-expired'),
+    field('expired-count', expired.length)
+  )
+
+  for (const vote of expired) {
+    const embed = vote.message.embeds[0]
+    embed.setDescription(`~~${embed.description}~~\n**${VoteResult.EXPIRED}**`)
+    embed.setColor(Colours.GREY)
+
+    const buttons = generateVoteButtons({ disabled: true })
+
+    // eslint-disable-next-line no-await-in-loop
+    await vote.message.edit({
+      embeds: [embed],
+      components: [buttons],
+    })
+
+    vote.cancel(undefined)
+    logger.info(
+      field('context', 'vote'),
+      field('action', 'expired'),
+      field('id', vote.message.id)
+    )
+  }
+}, ms('60s'))
+
+const sweepInterval = setInterval(async () => {
+  // Wait for client to be ready
+  if (client.readyAt === null) return
+
+  await sweepCache(client)
+}, ms('90s'))
+
 exitHook(async exit => {
+  clearInterval(expireInterval)
+  clearInterval(sweepInterval)
+
   client.destroy()
   exit()
 })

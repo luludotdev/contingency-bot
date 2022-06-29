@@ -10,6 +10,12 @@ const DRY_RUN_TEXT = '[Dry Run]'
 export const DRY_RUN_PREFIX = () => (env.DRY_RUN ? `${DRY_RUN_TEXT} ` : '')
 export const DRY_RUN_RICH = () => (env.DRY_RUN ? `**${DRY_RUN_TEXT}** ` : '')
 
+export const enum VoteResult {
+  CANCELLED = 'This vote was cancelled.',
+  EXPIRED = 'This vote has expired.',
+  PASSED = 'Vote passed.',
+}
+
 export const enum Reply {
   VOTE_CANCELLED = 'Vote Cancelled.',
 
