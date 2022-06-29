@@ -36,6 +36,7 @@
     "@lolpants/env": "^0.5.0",
     "@lolpants/exit": "^0.1.0",
     "@lolpants/jogger": "^0.6.0",
+    "discord-api-types": "^0.35.0",
     "discord.js": "^13.8.0",
     "discordx": "^9.7.3",
     "execa": "^6.1.0",

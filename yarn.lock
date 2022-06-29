@@ -1058,6 +1058,7 @@ __metadata:
     "@lolpants/jogger": ^0.6.0
     "@types/ms": ^0.7.31
     "@types/node": ^18.0.0
+    discord-api-types: ^0.35.0
     discord.js: ^13.8.0
     discordx: ^9.7.3
     execa: ^6.1.0
@@ -1247,6 +1248,13 @@ __metadata:
   version: 0.33.5
   resolution: "discord-api-types@npm:0.33.5"
   checksum: 6dcaad640c5693a69c9a4f5e444e739dde11ba835164ae6fd3dd5a1ab7b4d7f96cd022ed653eeaff2c8051ead0d998a5d502a2915cfacdde596364b82d9e3b3f
+  languageName: node
+  linkType: hard
+
+"discord-api-types@npm:^0.35.0":
+  version: 0.35.0
+  resolution: "discord-api-types@npm:0.35.0"
+  checksum: 22c6709c0221f3ef0e1ba9ed0b50ec0beb81a95c8e40660bcfa70bfffa3ce5d73661626c768c227bb36028b63248f22f976ff7225a6fce9b91f57048239dcde4
   languageName: node
   linkType: hard
 
