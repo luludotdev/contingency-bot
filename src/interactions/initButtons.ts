@@ -36,7 +36,7 @@ export abstract class InitButtons {
 
     if (button.user.id !== userID) {
       await button.reply({
-        content: Reply.ERR_NOT_INITIATOR,
+        content: Reply.ERR_NOT_INITIATOR_CONFIRM,
         ephemeral: true,
       })
 
@@ -117,11 +117,11 @@ export abstract class InitButtons {
     if (!button.channel) throw new Error('missing channel')
 
     const { components } = parseInteractionID(button.customId)
-    const [userID, messageID] = components
+    const [userID] = components
 
     if (button.user.id !== userID) {
       await button.reply({
-        content: Reply.ERR_NOT_INITIATOR,
+        content: Reply.ERR_NOT_INITIATOR_CANCEL,
         ephemeral: true,
       })
 
