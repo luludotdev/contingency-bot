@@ -1,4 +1,5 @@
 export const enum Reply {
+  ERR_IN_PROGRESS = 'A vote against that user is already in progress!',
   ERR_IS_DM = 'This command cannot be run in DMs!',
   ERR_IS_BOT = 'You cannot start a vote against this bot!',
   ERR_IS_SELF = 'You cannot start a vote against yourself!',

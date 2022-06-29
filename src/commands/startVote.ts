@@ -1,5 +1,6 @@
 import { type CommandInteraction, type GuildMember, User } from 'discord.js'
 import { Discord, Slash, SlashOption } from 'discordx'
+import { manager } from '~/bot.js'
 import { Reply } from '~/constants.js'
 
 @Discord()
@@ -51,6 +52,16 @@ export abstract class StartVote {
     if (botRolePosition <= targetRolePosition) {
       await ctx.reply({
         content: Reply.ERR_TARGET_HIGHER,
+        ephemeral: true,
+      })
+
+      return
+    }
+
+    const inProgress = manager.voteInProgress(target)
+    if (inProgress !== undefined) {
+      await ctx.reply({
+        content: `${Reply.ERR_IN_PROGRESS}\n${inProgress.message.url}`,
         ephemeral: true,
       })
 

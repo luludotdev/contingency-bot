@@ -8,7 +8,9 @@ import { env, IS_DEV } from '~/env.js'
 import { ctxField, logger, userField } from '~/logger.js'
 import { getVersion } from '~/version.js'
 import { sweepCache, syncMembers } from '~/vote/utils.js'
+import { createManager } from './vote/manager.js'
 
+export const manager = createManager()
 const client = new Client({
   silent: true,
   intents: [
