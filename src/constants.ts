@@ -11,6 +11,8 @@ export const DRY_RUN_PREFIX = () => (env.DRY_RUN ? `${DRY_RUN_TEXT} ` : '')
 export const DRY_RUN_RICH = () => (env.DRY_RUN ? `**${DRY_RUN_TEXT}** ` : '')
 
 export const enum Reply {
+  VOTE_CANCELLED = 'Vote Cancelled.',
+
   ERR_GENERIC = 'An error occurred, please check the bot log.',
   ERR_IN_PROGRESS = 'A vote against that user is already in progress!',
   ERR_IS_DM = 'This command cannot be run in DMs!',
