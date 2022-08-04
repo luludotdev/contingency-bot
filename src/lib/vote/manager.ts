@@ -48,7 +48,7 @@ export interface Vote {
 }
 
 export const createManager: () => Manager = () => {
-  const votes: Map<string, Vote> = new Map()
+  const votes = new Map<string, Vote>()
 
   return {
     async startVote(message, initiator, target) {

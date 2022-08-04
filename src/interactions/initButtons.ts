@@ -1,5 +1,5 @@
 import { field } from '@lolpants/jogger'
-import { type ButtonInteraction, Message } from 'discord.js'
+import { type ButtonInteraction } from 'discord.js'
 import { ButtonComponent, Discord } from 'discordx'
 import { setTimeout } from 'node:timers/promises'
 import { generateInitButtons, generateVoteButtons } from '~/lib/buttons.js'
@@ -62,10 +62,7 @@ export abstract class InitButtons {
       return
     }
 
-    const btnMessage =
-      button.message instanceof Message
-        ? button.message
-        : await button.channel.messages.fetch(button.message.id)
+    const btnMessage = button.message
     await btnMessage.delete()
 
     await button.channel.sendTyping()

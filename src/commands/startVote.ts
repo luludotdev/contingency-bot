@@ -1,4 +1,9 @@
-import { type CommandInteraction, type GuildMember, User } from 'discord.js'
+import {
+  type CommandInteraction,
+  type GuildMember,
+  ApplicationCommandOptionType as OptionType,
+  User,
+} from 'discord.js'
 import { Discord, Slash, SlashOption } from 'discordx'
 import { generateInitButtons } from '~/lib/buttons.js'
 import { DRY_RUN_RICH, Reply } from '~/lib/constants.js'
@@ -8,7 +13,7 @@ import { manager } from '~/lib/manager.js'
 export abstract class StartVote {
   @Slash('start-vote')
   public async run(
-    @SlashOption('target', { type: 'USER' })
+    @SlashOption('target', { type: OptionType.User })
     target: GuildMember | User,
     ctx: CommandInteraction
   ) {
@@ -48,7 +53,7 @@ export abstract class StartVote {
       return
     }
 
-    const botRolePosition = ctx.guild.me?.roles.highest.position ?? -1
+    const botRolePosition = ctx.guild.members.me?.roles.highest.position ?? -1
     const targetRolePosition = target.roles.highest.position
     if (botRolePosition <= targetRolePosition) {
       await ctx.reply({

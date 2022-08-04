@@ -1,7 +1,7 @@
 import { dirname, importx } from '@discordx/importer'
 import { exitHook } from '@lolpants/exit'
 import { field } from '@lolpants/jogger'
-import { Intents } from 'discord.js'
+import { EmbedBuilder, IntentsBitField as Intents } from 'discord.js'
 import { Client } from 'discordx'
 import ms from 'ms'
 import { join as joinPath } from 'node:path/posix'
@@ -16,9 +16,9 @@ import { ctxField, logger, userField } from '~/logger.js'
 const client = new Client({
   silent: true,
   intents: [
-    Intents.FLAGS.GUILDS,
-    Intents.FLAGS.GUILD_MESSAGES,
-    Intents.FLAGS.GUILD_MEMBERS,
+    Intents.Flags.Guilds,
+    Intents.Flags.GuildMessages,
+    Intents.Flags.GuildMembers,
   ],
   botGuilds: [env.GUILD_ID],
 })
@@ -72,9 +72,11 @@ const expireInterval = setInterval(async () => {
   )
 
   for (const vote of expired) {
-    const embed = vote.message.embeds[0]
-    embed.setDescription(`~~${embed.description}~~\n**${VoteResult.EXPIRED}**`)
+    const embed = EmbedBuilder.from(vote.message.embeds[0])
     embed.setColor(Colours.GREY)
+    embed.setDescription(
+      `~~${embed.data.description}~~\n**${VoteResult.EXPIRED}**`
+    )
 
     const buttons = generateVoteButtons({ disabled: true })
 

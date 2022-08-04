@@ -7,14 +7,14 @@ import {
 } from '@lolpants/jogger'
 import type { Field } from '@lolpants/jogger'
 import {
-  DMChannel,
+  ChannelType,
   type GuildMember,
   type TextBasedChannel,
   User,
 } from 'discord.js'
 import { env, IS_DEV } from '~/env.js'
 
-const consoleSink = createConsoleSink(IS_DEV)
+const consoleSink = createConsoleSink({ debug: IS_DEV })
 const fileSink = createFileSink({
   name: 'bot',
   directory: 'logs',
@@ -52,12 +52,12 @@ export const channelField: (
   name: string,
   channel: TextBasedChannel
 ) => Readonly<Field> = (name, channel) => {
-  if (channel instanceof DMChannel || channel.partial) {
+  if (channel.type === ChannelType.DM) {
     return field(
       name,
       field('id', channel.id),
       field('type', channel.type),
-      userField('recipient', channel.recipient)
+      userField('recipient', channel.recipient!)
     )
   }
 

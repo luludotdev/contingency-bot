@@ -1,4 +1,4 @@
-import { type ColorResolvable, MessageEmbed } from 'discord.js'
+import { type ColorResolvable, EmbedBuilder } from 'discord.js'
 import { Colours, DRY_RUN_PREFIX } from '~/lib/constants.js'
 
 interface EmbedOptions {
@@ -8,19 +8,19 @@ interface EmbedOptions {
   votes: string
 }
 
-export const generateEmbed: (options: EmbedOptions) => MessageEmbed = ({
+export const generateEmbed: (options: EmbedOptions) => EmbedBuilder = ({
   description,
   colour,
   progress,
   votes,
 }) => {
   const dryRunText = DRY_RUN_PREFIX()
-  const embed = new MessageEmbed()
+  const embed = new EmbedBuilder()
     .setTitle(`${dryRunText}Emergency Vote`)
     .setColor(colour ?? Colours.RED)
     .setDescription(description)
-    .addField('Progress', progress)
-    .addField('Votes', votes)
+    .addFields({ name: 'Progress', value: progress })
+    .addFields({ name: 'Votes', value: votes })
 
   return embed
 }

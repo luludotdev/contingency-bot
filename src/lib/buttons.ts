@@ -1,4 +1,4 @@
-import { MessageActionRow, MessageButton } from 'discord.js'
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 import { interactionID } from '~/lib/interactions.js'
 
 interface InitButtonOptions {
@@ -9,26 +9,30 @@ interface InitButtonOptions {
 
 export const generateInitButtons: (
   options: InitButtonOptions
-) => MessageActionRow = options => {
+) => ActionRowBuilder<ButtonBuilder> = options => {
   const disabled = options.disabled ?? false
   const context = disabled ? 'dummy' : 'init'
 
   const confirmData = options.confirmData ?? []
   const cancelData = options.cancelData ?? []
 
-  const confirm = new MessageButton()
+  const confirm = new ButtonBuilder()
     .setLabel('Confirm')
     .setCustomId(interactionID(context, 'confirm', ...confirmData))
-    .setStyle('SUCCESS')
+    .setStyle(ButtonStyle.Success)
     .setDisabled(disabled)
 
-  const cancel = new MessageButton()
+  const cancel = new ButtonBuilder()
     .setLabel('Cancel')
     .setCustomId(interactionID(context, 'cancel', ...cancelData))
-    .setStyle('DANGER')
+    .setStyle(ButtonStyle.Danger)
     .setDisabled(disabled)
 
-  const row = new MessageActionRow().addComponents(confirm, cancel)
+  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+    confirm,
+    cancel
+  )
+
   return row
 }
 
@@ -41,7 +45,7 @@ interface VoteButtonOptions {
 
 export const generateVoteButtons: (
   options: VoteButtonOptions
-) => MessageActionRow = options => {
+) => ActionRowBuilder<ButtonBuilder> = options => {
   const disabled = options.disabled ?? false
   const context = disabled ? 'dummy' : 'vote'
 
@@ -49,24 +53,29 @@ export const generateVoteButtons: (
   const revokeData = options.revokeData ?? []
   const cancelData = options.cancelData ?? []
 
-  const approve = new MessageButton()
+  const approve = new ButtonBuilder()
     .setLabel('Approve')
     .setCustomId(interactionID(context, 'approve', ...approveData))
-    .setStyle('PRIMARY')
+    .setStyle(ButtonStyle.Primary)
     .setDisabled(disabled)
 
-  const revoke = new MessageButton()
+  const revoke = new ButtonBuilder()
     .setLabel('Revoke Approval')
     .setCustomId(interactionID(context, 'revoke', ...revokeData))
-    .setStyle('SECONDARY')
+    .setStyle(ButtonStyle.Secondary)
     .setDisabled(disabled)
 
-  const cancel = new MessageButton()
+  const cancel = new ButtonBuilder()
     .setLabel('Cancel')
     .setCustomId(interactionID(context, 'cancel', ...cancelData))
-    .setStyle('DANGER')
+    .setStyle(ButtonStyle.Danger)
     .setDisabled(disabled)
 
-  const row = new MessageActionRow().addComponents(approve, revoke, cancel)
+  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+    approve,
+    revoke,
+    cancel
+  )
+
   return row
 }

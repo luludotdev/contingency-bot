@@ -2,8 +2,7 @@ import { field } from '@lolpants/jogger'
 import {
   type ButtonInteraction,
   DiscordAPIError,
-  Message,
-  type MessageEmbed,
+  EmbedBuilder,
 } from 'discord.js'
 import { ButtonComponent, Discord } from 'discordx'
 import { env } from '~/env.js'
@@ -15,7 +14,7 @@ import { logger } from '~/logger.js'
 
 export const cancelVote = async (
   button: ButtonInteraction,
-  embed: MessageEmbed
+  embed: EmbedBuilder
 ) => {
   const buttons = generateVoteButtons({ disabled: true })
   await button.update({ embeds: [embed], components: [buttons] })
@@ -30,19 +29,15 @@ export abstract class VoteButtons {
     if (!button.guild) throw new Error('missing guild')
     if (!button.channel) throw new Error('missing channel')
 
-    const message =
-      button.message instanceof Message
-        ? button.message
-        : await button.channel.messages.fetch(button.message.id)
-
-    const messageID = button.message.id
+    const { message } = button
+    const messageID = message.id
     const vote = manager.getVote(messageID)
 
     if (vote === undefined) {
-      const embed = message.embeds[0]
+      const embed = EmbedBuilder.from(message.embeds[0])
       embed.setColor(Colours.GREY)
       embed.setDescription(
-        `~~${embed.description}~~\n**${VoteResult.EXPIRED}**`
+        `~~${embed.data.description}~~\n**${VoteResult.EXPIRED}**`
       )
 
       await cancelVote(button, embed)
@@ -81,12 +76,15 @@ export abstract class VoteButtons {
       field('progress', vote.progress)
     )
 
-    const embed = message.embeds[0]
-    embed.fields[0].value = vote.progress
-    embed.fields[1].value = vote.voterList
+    const embed = EmbedBuilder.from(message.embeds[0])
+    embed.data.fields ??= []
+    embed.data.fields[0].value = vote.progress
+    embed.data.fields[1].value = vote.voterList
 
     if (vote.isMet) {
-      embed.setDescription(`~~${embed.description}~~\n**${VoteResult.PASSED}**`)
+      embed.setDescription(
+        `~~${embed.data.description}~~\n**${VoteResult.PASSED}**`
+      )
 
       vote.cancel(undefined)
       await cancelVote(button, embed)
@@ -106,7 +104,8 @@ export abstract class VoteButtons {
         } else {
           // Check permissions anyway
           const hasPerms =
-            vote.message.guild?.me?.permissions.has('MANAGE_ROLES')
+            vote.message.guild?.members?.me?.permissions.has('ManageRoles')
+
           if (hasPerms === false) {
             throw new CustomError('Missing Permissions')
           }
@@ -114,16 +113,18 @@ export abstract class VoteButtons {
 
         embed.setColor(Colours.GREEN)
         embed.setDescription(
-          `${embed.description}\n\nAll roles removed from ${vote.target} successfully!`
+          `${embed.data.description}\n\nAll roles removed from ${vote.target} successfully!`
         )
       } catch (error: unknown) {
         embed.setColor(Colours.GREY)
         embed.setDescription(
-          `${embed.description}\n\nFailed to remove roles from ${vote.target}`
+          `${embed.data.description}\n\nFailed to remove roles from ${vote.target}`
         )
 
         if (error instanceof DiscordAPIError || error instanceof CustomError) {
-          embed.setDescription(`${embed.description}\n**${error.message}.**`)
+          embed.setDescription(
+            `${embed.data.description}\n**${error.message}.**`
+          )
         }
       }
     }
@@ -138,19 +139,15 @@ export abstract class VoteButtons {
     if (!button.guild) throw new Error('missing guild')
     if (!button.channel) throw new Error('missing channel')
 
-    const message =
-      button.message instanceof Message
-        ? button.message
-        : await button.channel.messages.fetch(button.message.id)
-
+    const { message } = button
     const messageID = button.message.id
     const vote = manager.getVote(messageID)
 
     if (vote === undefined) {
-      const embed = message.embeds[0]
+      const embed = EmbedBuilder.from(message.embeds[0])
       embed.setColor(Colours.GREY)
       embed.setDescription(
-        `~~${embed.description}~~\n**${VoteResult.EXPIRED}**`
+        `~~${embed.data.description}~~\n**${VoteResult.EXPIRED}**`
       )
 
       await cancelVote(button, embed)
@@ -196,19 +193,15 @@ export abstract class VoteButtons {
     if (!button.guild) throw new Error('missing guild')
     if (!button.channel) throw new Error('missing channel')
 
-    const message =
-      button.message instanceof Message
-        ? button.message
-        : await button.channel.messages.fetch(button.message.id)
-
+    const { message } = button
     const messageID = button.message.id
     const vote = manager.getVote(messageID)
 
     if (vote === undefined) {
-      const embed = message.embeds[0]
+      const embed = EmbedBuilder.from(message.embeds[0])
       embed.setColor(Colours.GREY)
       embed.setDescription(
-        `~~${embed.description}~~\n**${VoteResult.EXPIRED}**`
+        `~~${embed.data.description}~~\n**${VoteResult.EXPIRED}**`
       )
 
       await cancelVote(button, embed)
@@ -227,10 +220,10 @@ export abstract class VoteButtons {
       return
     }
 
-    const embed = message.embeds[0]
+    const embed = EmbedBuilder.from(message.embeds[0])
     embed.setColor(Colours.GREY)
     embed.setDescription(
-      `~~${embed.description}~~\n**${VoteResult.CANCELLED}**`
+      `~~${embed.data.description}~~\n**${VoteResult.CANCELLED}**`
     )
 
     vote.cancel(member)
