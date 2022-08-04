@@ -14,11 +14,16 @@ import {
 } from 'discord.js'
 import { env, IS_DEV } from '~/env.js'
 
-const consoleSink = createConsoleSink({ debug: IS_DEV })
+const consoleSink = createConsoleSink({
+  debug: env.DEBUG_LOGS ?? IS_DEV,
+  trace: env.TRACE_LOGS,
+})
+
 const fileSink = createFileSink({
   name: 'bot',
   directory: 'logs',
   debug: env.DEBUG_LOGS ?? IS_DEV,
+  trace: env.TRACE_LOGS,
   rollEveryDay: true,
 })
 

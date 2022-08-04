@@ -33,6 +33,7 @@ export const env = defineEnvironment({
   NODE_ENV: t.string(),
 
   DEBUG_LOGS: t.bool(),
+  TRACE_LOGS: t.bool().default(false),
   GIT_VERSION: t.string(),
   // #endregion
 
