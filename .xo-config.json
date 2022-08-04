@@ -40,6 +40,7 @@
     "unicorn/no-unreadable-array-destructuring": 0,
     "unicorn/no-process-exit": 0,
 
+    "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
     "@typescript-eslint/no-base-to-string": 0,
     "@typescript-eslint/naming-convention": 0,
     "@typescript-eslint/restrict-template-expressions": 0,
