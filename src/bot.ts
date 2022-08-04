@@ -88,7 +88,7 @@ const expireInterval = setInterval(async () => {
 
     vote.cancel(undefined)
     logger.info(
-      field('context', 'vote'),
+      field('context', 'expire-interval'),
       field('action', 'expired'),
       field('id', vote.message.id)
     )

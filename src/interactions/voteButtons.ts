@@ -10,7 +10,9 @@ import { generateVoteButtons } from '~/lib/buttons.js'
 import { Colours, Reply, VoteResult } from '~/lib/constants.js'
 import { interactionRX } from '~/lib/interactions.js'
 import { manager } from '~/lib/manager.js'
-import { logger } from '~/logger.js'
+import { ctxField, logger } from '~/logger.js'
+
+const context = ctxField('voteButtons')
 
 export const cancelVote = async (
   button: ButtonInteraction,
@@ -68,7 +70,7 @@ export abstract class VoteButtons {
 
     vote.approve(member)
     logger.info(
-      field('context', 'vote'),
+      context,
       field('action', 'approve'),
       field('id', vote.message.id),
       field('user', member.user.tag),
@@ -90,7 +92,7 @@ export abstract class VoteButtons {
       await cancelVote(button, embed)
 
       logger.info(
-        field('context', 'vote'),
+        context,
         field('action', 'passed'),
         field('id', vote.message.id)
       )
@@ -173,7 +175,7 @@ export abstract class VoteButtons {
 
     vote.revoke(member)
     logger.info(
-      field('context', 'vote'),
+      context,
       field('action', 'revoke'),
       field('id', vote.message.id),
       field('user', member.user.tag),
@@ -230,7 +232,7 @@ export abstract class VoteButtons {
     await cancelVote(button, embed)
 
     logger.info(
-      field('context', 'vote'),
+      context,
       field('action', 'cancel'),
       field('id', vote.message.id)
     )

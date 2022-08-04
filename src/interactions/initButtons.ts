@@ -8,7 +8,9 @@ import { generateEmbed } from '~/lib/embeds.js'
 import { interactionRX, parseInteractionID } from '~/lib/interactions.js'
 import { manager } from '~/lib/manager.js'
 import { generateMentions } from '~/lib/vote/utils.js'
-import { logger } from '~/logger.js'
+import { ctxField, logger } from '~/logger.js'
+
+const context = ctxField('initButtons')
 
 const cancelConfirmation = async (
   button: ButtonInteraction,
@@ -33,6 +35,7 @@ export abstract class InitButtons {
 
     const { key, components } = parseInteractionID(button.customId)
     const [userID, targetID] = components
+    logger.trace(context)
 
     if (button.user.id !== userID) {
       await button.reply({
@@ -77,7 +80,7 @@ export abstract class InitButtons {
     const vote = await manager.startVote(message, initiator, target)
 
     logger.info(
-      field('context', 'vote'),
+      context,
       field('action', 'start'),
       field('id', vote.message.id),
       field('initiator', initiator.user.tag),
@@ -87,7 +90,7 @@ export abstract class InitButtons {
     )
 
     logger.info(
-      field('context', 'vote'),
+      context,
       field('action', 'approve'),
       field('id', vote.message.id),
       field('user', button.user.tag),

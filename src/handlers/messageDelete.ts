@@ -3,7 +3,9 @@ import { type ArgsOf, Discord, On } from 'discordx'
 import { generateVoteButtons } from '~/lib/buttons.js'
 import { generateEmbed } from '~/lib/embeds.js'
 import { manager } from '~/lib/manager.js'
-import { logger } from '~/logger.js'
+import { ctxField, logger } from '~/logger.js'
+
+const context = ctxField('message-delete')
 
 @Discord()
 export abstract class MessageDelete {
@@ -31,7 +33,7 @@ export abstract class MessageDelete {
 
     vote.replaceMessage(newMessage)
     logger.info(
-      field('context', 'vote'),
+      context,
       field('action', 'message-replaced'),
       field('oldID', message.id),
       field('newID', newMessage.id)
