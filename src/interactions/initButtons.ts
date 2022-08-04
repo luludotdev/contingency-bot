@@ -8,11 +8,9 @@ import { generateEmbed } from '~/lib/embeds.js'
 import { interactionRX, parseInteractionID } from '~/lib/interactions.js'
 import { manager } from '~/lib/manager.js'
 import { generateMentions } from '~/lib/vote/utils.js'
-import { ctxField, logger } from '~/logger.js'
+import { createTrace, ctxField, logger } from '~/logger.js'
 
 const context = ctxField('initButtons')
-const traceFn = createField('fn')
-const trace = createField('trace')
 
 const cancelConfirmation = async (
   button: ButtonInteraction,
@@ -32,17 +30,17 @@ const cancelConfirmation = async (
 export abstract class InitButtons {
   @ButtonComponent(interactionRX('init', 'confirm'))
   public async runConfirm(button: ButtonInteraction) {
-    const fn = traceFn('runConfirm')
+    const trace = createTrace(context, 'runConfirm')
 
     if (!button.guild) throw new Error('missing guild')
     if (!button.channel) throw new Error('missing channel')
 
     const { key, components } = parseInteractionID(button.customId)
     const [userID, targetID] = components
-    logger.trace(context, trace('parsed custom id'))
+    trace('parsed custom id')
 
     if (button.user.id !== userID) {
-      logger.trace(context, fn, trace('vote confirmed by incorrect user'))
+      trace('vote confirmed by incorrect user')
       await button.reply({
         content: Reply.ERR_NOT_INITIATOR_CONFIRM,
         ephemeral: true,
@@ -52,7 +50,7 @@ export abstract class InitButtons {
     }
 
     if (!targetID) {
-      logger.trace(context, fn, trace('no target id'))
+      trace('no target id')
       await cancelConfirmation(button, Reply.ERR_GENERIC)
 
       logger.error(
@@ -64,10 +62,10 @@ export abstract class InitButtons {
     }
 
     const target = button.guild.members.cache.get(targetID)
-    logger.trace(context, fn, trace('resolved target from id'))
+    trace('resolved target from id')
 
     if (!target) {
-      logger.trace(context, fn, trace('no target'))
+      trace('no target')
 
       await cancelConfirmation(button, Reply.ERR_GENERIC)
       logger.error(field('interaction', key), field('error', 'target === null'))
@@ -75,23 +73,23 @@ export abstract class InitButtons {
       return
     }
 
-    logger.trace(context, fn, trace('deleting original message'))
+    trace('deleting original message')
     const btnMessage = button.message
     await btnMessage.delete()
-    logger.trace(context, fn, trace('deleted original message'))
+    trace('deleted original message')
 
     await button.channel.sendTyping()
 
-    logger.trace(context, fn, trace('generating mentions'))
+    trace('generating mentions')
     const mentionsArray = await generateMentions(button.guild.roles, target)
     const mentions = mentionsArray.join(' ')
-    logger.trace(context, fn, trace('generated mentions'))
+    trace('generated mentions')
 
     const message = await button.channel.send({
       content: `**EMERGENCY ALERT:** ${mentions}`,
     })
 
-    logger.trace(context, fn, trace('starting vote'))
+    trace('starting vote')
     const initiator = button.guild.members.cache.get(button.user.id)!
     const vote = await manager.startVote(message, initiator, target)
 

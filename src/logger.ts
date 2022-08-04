@@ -4,8 +4,8 @@ import {
   createFileSink,
   createLogger,
   field,
+  type Field,
 } from '@lolpants/jogger'
-import type { Field } from '@lolpants/jogger'
 import {
   ChannelType,
   type GuildMember,
@@ -72,6 +72,13 @@ export const channelField: (
     field('type', channel.type),
     field('name', `#${channel.name}`)
   )
+}
+
+const traceFn = createField('fn')
+const trace = createField('trace')
+export const createTrace = (ctx: Field, fn: string) => {
+  const fnField = traceFn(fn)
+  return (message: string) => logger.trace(ctx, fnField, trace(message))
 }
 
 export const flush = async () => fileSink.flush()
