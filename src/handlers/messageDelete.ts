@@ -9,7 +9,7 @@ const context = ctxField('message-delete')
 
 @Discord()
 export abstract class MessageDelete {
-  @On('messageDelete')
+  @On({ event: 'messageDelete' })
   public async onMessageDelete([message]: ArgsOf<'messageDelete'>) {
     const vote = manager.getVote(message.id)
     if (vote === undefined) return

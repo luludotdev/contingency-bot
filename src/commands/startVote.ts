@@ -14,9 +14,17 @@ const context = ctxField('startVote')
 
 @Discord()
 export abstract class StartVote {
-  @Slash('start-vote')
+  @Slash({
+    name: 'start-vote',
+    description: 'Start an emergency vote to strip roles from a user',
+    defaultMemberPermissions: 'ManageGuild',
+  })
   public async run(
-    @SlashOption('target', { type: OptionType.User })
+    @SlashOption({
+      name: 'target',
+      description: 'Target of the vote',
+      type: OptionType.User,
+    })
     target: GuildMember | User,
     ctx: CommandInteraction
   ) {

@@ -28,7 +28,7 @@ const cancelConfirmation = async (
 
 @Discord()
 export abstract class InitButtons {
-  @ButtonComponent(interactionRX('init', 'confirm'))
+  @ButtonComponent({ id: interactionRX('init', 'confirm') })
   public async runConfirm(button: ButtonInteraction) {
     const trace = createTrace(context, 'runConfirm')
 
@@ -126,7 +126,7 @@ export abstract class InitButtons {
     })
   }
 
-  @ButtonComponent(interactionRX('init', 'cancel'))
+  @ButtonComponent({ id: interactionRX('init', 'cancel') })
   public async runCancel(button: ButtonInteraction) {
     if (!button.channel) throw new Error('missing channel')
 

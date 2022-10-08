@@ -26,7 +26,7 @@ class CustomError extends Error {}
 
 @Discord()
 export abstract class VoteButtons {
-  @ButtonComponent(interactionRX('vote', 'approve'))
+  @ButtonComponent({ id: interactionRX('vote', 'approve') })
   public async runApprove(button: ButtonInteraction) {
     if (!button.guild) throw new Error('missing guild')
     if (!button.channel) throw new Error('missing channel')
@@ -136,7 +136,7 @@ export abstract class VoteButtons {
       : button.update({ embeds: [embed] }))
   }
 
-  @ButtonComponent(interactionRX('vote', 'revoke'))
+  @ButtonComponent({ id: interactionRX('vote', 'revoke') })
   public async runRevoke(button: ButtonInteraction) {
     if (!button.guild) throw new Error('missing guild')
     if (!button.channel) throw new Error('missing channel')
@@ -190,7 +190,7 @@ export abstract class VoteButtons {
     await button.update({ embeds: [embed] })
   }
 
-  @ButtonComponent(interactionRX('vote', 'cancel'))
+  @ButtonComponent({ id: interactionRX('vote', 'cancel') })
   public async runCancel(button: ButtonInteraction) {
     if (!button.guild) throw new Error('missing guild')
     if (!button.channel) throw new Error('missing channel')
