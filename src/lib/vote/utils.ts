@@ -1,5 +1,5 @@
 import { field } from '@lolpants/jogger'
-import { type Client, type GuildMember, type RoleManager } from 'discord.js'
+import type { Client, GuildMember, RoleManager } from 'discord.js'
 import { env, roleMap } from '~/env.js'
 import { logger } from '~/logger.js'
 

@@ -1,6 +1,6 @@
 import { setTimeout } from 'node:timers/promises'
-import { createField, field } from '@lolpants/jogger'
-import { type ButtonInteraction } from 'discord.js'
+import { field } from '@lolpants/jogger'
+import { ButtonInteraction } from 'discord.js'
 import { ButtonComponent, Discord } from 'discordx'
 import { generateInitButtons, generateVoteButtons } from '~/lib/buttons.js'
 import { Reply } from '~/lib/constants.js'
@@ -46,7 +46,7 @@ export abstract class InitButtons {
         ephemeral: true,
       })
 
-      return false
+      return
     }
 
     if (!targetID) {
@@ -139,7 +139,7 @@ export abstract class InitButtons {
         ephemeral: true,
       })
 
-      return false
+      return
     }
 
     await cancelConfirmation(button, Reply.VOTE_CANCELLED, 1_500)

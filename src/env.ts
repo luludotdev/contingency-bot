@@ -49,10 +49,13 @@ export const env = defineEnvironment({
     .required()
     .validate(value => {
       try {
+        // @ts-expect-error Non-binding
         const _ = roleMap(value)
       } catch (error: unknown) {
         if (error instanceof Error) return error.message
       }
+
+      return undefined
     }),
 
   VOTING_WEIGHT: t.int().required(),
@@ -71,6 +74,8 @@ export const env = defineEnvironment({
       if (parsed < ms('5m')) {
         return 'Vote lifetime must be greater than 5 minutes!'
       }
+
+      return undefined
     }),
 })
 
