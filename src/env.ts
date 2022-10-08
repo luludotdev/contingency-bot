@@ -3,11 +3,11 @@ import '@lolpants/env/register.js'
 import { defineEnvironment, t } from '@lolpants/env'
 import ms from 'ms'
 
-export const roleMap = (v: string) => {
-  const split = v.split(';').map(entry => entry.split(','))
+export const roleMap = (input: string) => {
+  const split = input.split(';').map(entry => entry.split(','))
 
-  const mapped: Array<[roleID: string, weight: number]> = split.map(
-    ([key, value]) => [key, Number.parseInt(value, 10)]
+  const mapped: [roleID: string, weight: number][] = split.map(
+    ([key, value]) => [key, Number.parseInt(value, 10)],
   )
 
   const roleRX = /^\d+$/
@@ -47,9 +47,9 @@ export const env = defineEnvironment({
   ROLE_WEIGHTS: t
     .string()
     .required()
-    .validate(v => {
+    .validate(value => {
       try {
-        const _ = roleMap(v)
+        const _ = roleMap(value)
       } catch (error: unknown) {
         if (error instanceof Error) return error.message
       }
@@ -62,10 +62,10 @@ export const env = defineEnvironment({
   MAX_VOTE_LIFETIME: t
     .string()
     .default('60m')
-    .validate(v => {
-      const parsed = ms(v)
+    .validate(value => {
+      const parsed = ms(value)
       if (parsed === undefined) {
-        return `Lifetime \`${v}\` is invalid!`
+        return `Lifetime \`${value}\` is invalid!`
       }
 
       if (parsed < ms('5m')) {

@@ -1,6 +1,6 @@
 export const interactionRX: (context: string, id: string) => RegExp = (
   context,
-  id
+  id,
 ) => new RegExp(`^${context}@${id}/?`)
 
 export const interactionID: (

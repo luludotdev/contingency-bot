@@ -1,10 +1,11 @@
+import { join as joinPath } from 'node:path/posix'
+import { clearInterval, setInterval } from 'node:timers'
 import { dirname, importx } from '@discordx/importer'
 import { exitHook } from '@lolpants/exit'
 import { field } from '@lolpants/jogger'
 import { EmbedBuilder, IntentsBitField as Intents } from 'discord.js'
 import { Client } from 'discordx'
 import ms from 'ms'
-import { join as joinPath } from 'node:path/posix'
 import { env, IS_DEV } from '~/env.js'
 import { generateVoteButtons } from '~/lib/buttons.js'
 import { Colours, VoteResult } from '~/lib/constants.js'
@@ -31,7 +32,7 @@ client.once('ready', async () => {
   logger.info(
     field('action', 'ready'),
     userField('user', client.user!),
-    field('guild', field('id', env.GUILD_ID), field('name', guild.name))
+    field('guild', field('id', env.GUILD_ID), field('name', guild.name)),
   )
 
   await syncMembers(client)
@@ -47,12 +48,12 @@ export const run = async () => {
   logger.info(
     ctxField('boot'),
     field('version', version),
-    field('environment', IS_DEV ? 'dev' : 'prod')
+    field('environment', IS_DEV ? 'dev' : 'prod'),
   )
 
   const imports = joinPath(
     dirname(import.meta.url).replaceAll('\\', '/'),
-    '/{commands,handlers,interactions}/**/*.{ts,js}'
+    '/{commands,handlers,interactions}/**/*.{ts,js}',
   )
 
   await importx(imports)
@@ -68,14 +69,14 @@ const expireInterval = setInterval(async () => {
 
   logger.info(
     field('action', 'sweep-expired'),
-    field('expired-count', expired.length)
+    field('expired-count', expired.length),
   )
 
   for (const vote of expired) {
     const embed = EmbedBuilder.from(vote.message.embeds[0])
     embed.setColor(Colours.GREY)
     embed.setDescription(
-      `~~${embed.data.description}~~\n**${VoteResult.EXPIRED}**`
+      `~~${embed.data.description}~~\n**${VoteResult.EXPIRED}**`,
     )
 
     const buttons = generateVoteButtons({ disabled: true })
@@ -90,7 +91,7 @@ const expireInterval = setInterval(async () => {
     logger.info(
       field('context', 'expire-interval'),
       field('action', 'expired'),
-      field('id', vote.message.id)
+      field('id', vote.message.id),
     )
   }
 }, ms('60s'))

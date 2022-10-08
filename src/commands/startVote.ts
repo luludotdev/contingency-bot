@@ -26,7 +26,7 @@ export abstract class StartVote {
       type: OptionType.User,
     })
     target: GuildMember | User,
-    ctx: CommandInteraction
+    ctx: CommandInteraction,
   ) {
     const trace = createTrace(context, 'run')
     trace('command invoked')

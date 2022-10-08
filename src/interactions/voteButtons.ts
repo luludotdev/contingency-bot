@@ -16,7 +16,7 @@ const context = ctxField('voteButtons')
 
 export const cancelVote = async (
   button: ButtonInteraction,
-  embed: EmbedBuilder
+  embed: EmbedBuilder,
 ) => {
   const buttons = generateVoteButtons({ disabled: true })
   await button.update({ embeds: [embed], components: [buttons] })
@@ -39,7 +39,7 @@ export abstract class VoteButtons {
       const embed = EmbedBuilder.from(message.embeds[0])
       embed.setColor(Colours.GREY)
       embed.setDescription(
-        `~~${embed.data.description}~~\n**${VoteResult.EXPIRED}**`
+        `~~${embed.data.description}~~\n**${VoteResult.EXPIRED}**`,
       )
 
       await cancelVote(button, embed)
@@ -75,7 +75,7 @@ export abstract class VoteButtons {
       field('id', vote.message.id),
       field('user', member.user.tag),
       field('userID', member.id),
-      field('progress', vote.progress)
+      field('progress', vote.progress),
     )
 
     const embed = EmbedBuilder.from(message.embeds[0])
@@ -85,7 +85,7 @@ export abstract class VoteButtons {
 
     if (vote.isMet) {
       embed.setDescription(
-        `~~${embed.data.description}~~\n**${VoteResult.PASSED}**`
+        `~~${embed.data.description}~~\n**${VoteResult.PASSED}**`,
       )
 
       vote.cancel(undefined)
@@ -94,14 +94,14 @@ export abstract class VoteButtons {
       logger.info(
         context,
         field('action', 'passed'),
-        field('id', vote.message.id)
+        field('id', vote.message.id),
       )
 
       try {
         if (env.DRY_RUN === false) {
           await vote.target.roles.remove(
             vote.target.roles.cache,
-            `Emergency vote called by ${vote.initiator.user.tag}`
+            `Emergency vote called by ${vote.initiator.user.tag}`,
           )
         } else {
           // Check permissions anyway
@@ -115,17 +115,17 @@ export abstract class VoteButtons {
 
         embed.setColor(Colours.GREEN)
         embed.setDescription(
-          `${embed.data.description}\n\nAll roles removed from ${vote.target} successfully!`
+          `${embed.data.description}\n\nAll roles removed from ${vote.target} successfully!`,
         )
       } catch (error: unknown) {
         embed.setColor(Colours.GREY)
         embed.setDescription(
-          `${embed.data.description}\n\nFailed to remove roles from ${vote.target}`
+          `${embed.data.description}\n\nFailed to remove roles from ${vote.target}`,
         )
 
         if (error instanceof DiscordAPIError || error instanceof CustomError) {
           embed.setDescription(
-            `${embed.data.description}\n**${error.message}.**`
+            `${embed.data.description}\n**${error.message}.**`,
           )
         }
       }
@@ -149,7 +149,7 @@ export abstract class VoteButtons {
       const embed = EmbedBuilder.from(message.embeds[0])
       embed.setColor(Colours.GREY)
       embed.setDescription(
-        `~~${embed.data.description}~~\n**${VoteResult.EXPIRED}**`
+        `~~${embed.data.description}~~\n**${VoteResult.EXPIRED}**`,
       )
 
       await cancelVote(button, embed)
@@ -180,7 +180,7 @@ export abstract class VoteButtons {
       field('id', vote.message.id),
       field('user', member.user.tag),
       field('userID', member.id),
-      field('progress', vote.progress)
+      field('progress', vote.progress),
     )
 
     const embed = message.embeds[0]
@@ -203,7 +203,7 @@ export abstract class VoteButtons {
       const embed = EmbedBuilder.from(message.embeds[0])
       embed.setColor(Colours.GREY)
       embed.setDescription(
-        `~~${embed.data.description}~~\n**${VoteResult.EXPIRED}**`
+        `~~${embed.data.description}~~\n**${VoteResult.EXPIRED}**`,
       )
 
       await cancelVote(button, embed)
@@ -225,7 +225,7 @@ export abstract class VoteButtons {
     const embed = EmbedBuilder.from(message.embeds[0])
     embed.setColor(Colours.GREY)
     embed.setDescription(
-      `~~${embed.data.description}~~\n**${VoteResult.CANCELLED}**`
+      `~~${embed.data.description}~~\n**${VoteResult.CANCELLED}**`,
     )
 
     vote.cancel(member)
@@ -234,7 +234,7 @@ export abstract class VoteButtons {
     logger.info(
       context,
       field('action', 'cancel'),
-      field('id', vote.message.id)
+      field('id', vote.message.id),
     )
   }
 }

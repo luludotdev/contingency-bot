@@ -36,7 +36,7 @@ export abstract class MessageDelete {
       context,
       field('action', 'message-replaced'),
       field('oldID', message.id),
-      field('newID', newMessage.id)
+      field('newID', newMessage.id),
     )
   }
 }

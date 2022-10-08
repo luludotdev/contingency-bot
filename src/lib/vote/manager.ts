@@ -1,13 +1,13 @@
-import { type GuildMember, type Message } from 'discord.js'
+import type { GuildMember, Message } from 'discord.js'
 import ms from 'ms'
-import { env } from '~/env.js'
 import { generateMentions, sortMembersByWeight, voteWeight } from './utils.js'
+import { env } from '~/env.js'
 
 export interface Manager {
   startVote(
     message: Message,
     initiator: GuildMember,
-    target: GuildMember
+    target: GuildMember,
   ): Promise<Vote>
 
   cancelVote(messageID: string): boolean
@@ -89,14 +89,12 @@ export const createManager: () => Manager = () => {
 
     getExpired() {
       const now = Date.now()
-      const expired = [...votes.values()].filter(vote => {
+      return [...votes.values()].filter(vote => {
         const startedAt = vote.startedAt.getTime()
         const future = startedAt + ms(env.MAX_VOTE_LIFETIME)
 
         return now > future
       })
-
-      return expired
     },
 
     canInitiate(member) {
@@ -110,7 +108,7 @@ const createVote: (
   message: Message,
   initiator: GuildMember,
   target: GuildMember,
-  manager: Manager
+  manager: Manager,
 ) => Promise<Vote> = async (_message, _initiator, _target, _manager) => {
   const startedAt = new Date()
   let message = _message
@@ -142,11 +140,9 @@ const createVote: (
     },
 
     get score() {
-      const score = [...votes.values()]
+      return [...votes.values()]
         .map(([_, weight]) => weight)
         .reduce((acc, weight) => acc + weight, 0)
-
-      return score
     },
 
     get isMet() {

@@ -1,7 +1,7 @@
+import { setTimeout } from 'node:timers/promises'
 import { createField, field } from '@lolpants/jogger'
 import { type ButtonInteraction } from 'discord.js'
 import { ButtonComponent, Discord } from 'discordx'
-import { setTimeout } from 'node:timers/promises'
 import { generateInitButtons, generateVoteButtons } from '~/lib/buttons.js'
 import { Reply } from '~/lib/constants.js'
 import { generateEmbed } from '~/lib/embeds.js'
@@ -15,7 +15,7 @@ const context = ctxField('initButtons')
 const cancelConfirmation = async (
   button: ButtonInteraction,
   editMessage: string,
-  delay = 5000
+  delay = 5_000,
 ) => {
   const buttons = generateInitButtons({ disabled: true })
   await button.update({ content: editMessage, components: [buttons] })
@@ -55,7 +55,7 @@ export abstract class InitButtons {
 
       logger.error(
         field('interaction', key),
-        field('error', 'targetID === undefined')
+        field('error', 'targetID === undefined'),
       )
 
       return
@@ -100,7 +100,7 @@ export abstract class InitButtons {
       field('initiator', initiator.user.tag),
       field('initiatorID', initiator.id),
       field('target', target.user.tag),
-      field('targetID', target.id)
+      field('targetID', target.id),
     )
 
     logger.info(
@@ -109,7 +109,7 @@ export abstract class InitButtons {
       field('id', vote.message.id),
       field('user', button.user.tag),
       field('userID', button.user.id),
-      field('progress', vote.progress)
+      field('progress', vote.progress),
     )
 
     const description = `${initiator} has started a vote to strip roles from ${target}`
@@ -142,6 +142,6 @@ export abstract class InitButtons {
       return false
     }
 
-    await cancelConfirmation(button, Reply.VOTE_CANCELLED, 1500)
+    await cancelConfirmation(button, Reply.VOTE_CANCELLED, 1_500)
   }
 }

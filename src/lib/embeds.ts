@@ -15,12 +15,10 @@ export const generateEmbed: (options: EmbedOptions) => EmbedBuilder = ({
   votes,
 }) => {
   const dryRunText = DRY_RUN_PREFIX()
-  const embed = new EmbedBuilder()
+  return new EmbedBuilder()
     .setTitle(`${dryRunText}Emergency Vote`)
     .setColor(colour ?? Colours.RED)
     .setDescription(description)
     .addFields({ name: 'Progress', value: progress })
     .addFields({ name: 'Votes', value: votes })
-
-  return embed
 }

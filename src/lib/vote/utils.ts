@@ -16,7 +16,7 @@ export const voteWeight: (member: GuildMember) => number = member => {
 type MemberWeight = [member: GuildMember, weight: number]
 export const sortMembersByWeight: (
   a: MemberWeight,
-  b: MemberWeight
+  b: MemberWeight,
 ) => number = ([member_a, weight_a], [member_b, weight_b]) =>
   weight_a > weight_b
     ? -1
@@ -27,7 +27,7 @@ export const sortMembersByWeight: (
 export const sweepCache: (client: Client) => Promise<number> = async client => {
   const guild = await client.guilds.fetch(env.GUILD_ID)
   const swept = guild.members.cache.sweep(
-    member => member.roles.cache.size === 1
+    member => member.roles.cache.size === 1,
   )
 
   logger.debug(field('action', 'sweep-members'), field('swept', swept))
@@ -36,7 +36,7 @@ export const sweepCache: (client: Client) => Promise<number> = async client => {
 
 export const syncMembers: (
   client: Client,
-  limit?: number
+  limit?: number,
 ) => Promise<number> = async (client, limit = 500_000) => {
   const guild = await client.guilds.fetch(env.GUILD_ID)
   const members = await guild.members.fetch({ limit })
@@ -48,7 +48,7 @@ export const syncMembers: (
 export const generateMentions: (
   roles: RoleManager,
   target: GuildMember,
-  sync?: boolean
+  sync?: boolean,
 ) => Promise<string[]> = async (roles, target, sync = true) => {
   try {
     if (sync) {
@@ -59,7 +59,7 @@ export const generateMentions: (
     // Warn but continue
     logger.warn(
       field('action', 'mentions'),
-      field('message', 'Failed to sync and sweep members!')
+      field('message', 'Failed to sync and sweep members!'),
     )
   }
 
@@ -79,7 +79,7 @@ export const generateMentions: (
     }
   }
 
-  const values: Array<[member: GuildMember, weight: number]> = members
+  const values: [member: GuildMember, weight: number][] = members
     .filter(member => member.id !== target.id)
     .map(member => [member, voteWeight(member)])
 

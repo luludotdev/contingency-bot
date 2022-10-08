@@ -8,7 +8,7 @@ interface InitButtonOptions {
 }
 
 export const generateInitButtons: (
-  options: InitButtonOptions
+  options: InitButtonOptions,
 ) => ActionRowBuilder<ButtonBuilder> = options => {
   const disabled = options.disabled ?? false
   const context = disabled ? 'dummy' : 'init'
@@ -28,12 +28,7 @@ export const generateInitButtons: (
     .setStyle(ButtonStyle.Danger)
     .setDisabled(disabled)
 
-  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    confirm,
-    cancel
-  )
-
-  return row
+  return new ActionRowBuilder<ButtonBuilder>().addComponents(confirm, cancel)
 }
 
 interface VoteButtonOptions {
@@ -44,7 +39,7 @@ interface VoteButtonOptions {
 }
 
 export const generateVoteButtons: (
-  options: VoteButtonOptions
+  options: VoteButtonOptions,
 ) => ActionRowBuilder<ButtonBuilder> = options => {
   const disabled = options.disabled ?? false
   const context = disabled ? 'dummy' : 'vote'
@@ -71,11 +66,9 @@ export const generateVoteButtons: (
     .setStyle(ButtonStyle.Danger)
     .setDisabled(disabled)
 
-  const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+  return new ActionRowBuilder<ButtonBuilder>().addComponents(
     approve,
     revoke,
-    cancel
+    cancel,
   )
-
-  return row
 }
