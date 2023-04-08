@@ -4,6 +4,7 @@ on: [push, pull_request]
 jobs:
   test:
     name: Test
+    if: contains(github.ref, 'refs/tags/') == false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -11,7 +12,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 18.x
           cache: yarn
       - name: Install packages
         run: yarn install --immutable
@@ -27,7 +28,7 @@ jobs:
       - name: Prepare
         id: prepare
         run: |
-          IMAGE_NAME=contingency-bot
+          IMAGE_NAME=spamton
 
           GIT_REPO='https://github.com/${{ github.repository }}'
           DOCKER_USER=`echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]'`
@@ -38,10 +39,10 @@ jobs:
             VERSION=${GITHUB_REF#refs/tags/v}
           fi
 
-          echo ::set-output name=git_repo::${GIT_REPO}
-          echo ::set-output name=docker_user::${DOCKER_USER}
-          echo ::set-output name=docker_image::${DOCKER_IMAGE}
-          echo ::set-output name=version::${VERSION}
+          echo "git_repo=${GIT_REPO}" >> $GITHUB_OUTPUT
+          echo "docker_user=${DOCKER_USER}" >> $GITHUB_OUTPUT
+          echo "docker_image=${DOCKER_IMAGE}" >> $GITHUB_OUTPUT
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Setup Docker Buildx
