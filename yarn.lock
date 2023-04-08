@@ -575,12 +575,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@lolpants/env@npm:^0.6.2":
-  version: 0.6.2
-  resolution: "@lolpants/env@npm:0.6.2"
+"@lolpants/env@npm:^0.6.3":
+  version: 0.6.3
+  resolution: "@lolpants/env@npm:0.6.3"
   dependencies:
-    dotenv-cra: ^3.0.2
-  checksum: 1905fa770bdbef50945f414625ef37db5f6c4dfefde6b5f1be358c54a5a3f2bec591861f46b453f17d74e9a014e9ab8e743d5d16958b67819ef11a175c4a274c
+    dotenv-cra: ^3.0.3
+  checksum: 4817111c06ecedce0cd76d47a625a502c3207117fc2b8b6f59f19c8511e88b8201a0c3681599e72fd272d0fe8c485b1c4599c2078af08541aac81f32bbc7cad3
   languageName: node
   linkType: hard
 
@@ -1735,7 +1735,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "contingency-bot@workspace:."
   dependencies:
-    "@lolpants/env": ^0.6.2
+    "@lolpants/env": ^0.6.3
     "@lolpants/eslint-config": ^0.4.0
     "@lolpants/exit": ^0.2.0
     "@lolpants/jogger": ^0.8.1
@@ -1946,7 +1946,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv-cra@npm:^3.0.2":
+"dotenv-cra@npm:^3.0.3":
   version: 3.0.3
   resolution: "dotenv-cra@npm:3.0.3"
   dependencies:

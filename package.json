@@ -33,7 +33,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@lolpants/env": "^0.6.2",
+    "@lolpants/env": "^0.6.3",
     "@lolpants/exit": "^0.2.0",
     "@lolpants/jogger": "^0.8.1",
     "discord-api-types": "^0.37.37",
