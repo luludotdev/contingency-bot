@@ -1,5 +1,7 @@
 import { field } from '@lolpants/jogger'
-import { ArgsOf, Discord, On } from 'discordx'
+import { Discord, On } from 'discordx'
+// eslint-disable-next-line @typescript-eslint/consistent-type-imports
+import type { ArgsOf } from 'discordx'
 import { generateVoteButtons } from '~/lib/buttons.js'
 import { generateEmbed } from '~/lib/embeds.js'
 import { manager } from '~/lib/manager.js'
