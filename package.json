@@ -1,6 +1,6 @@
 {
   "name": "contingency-bot",
-  "packageManager": "yarn@3.2.4",
+  "packageManager": "yarn@3.5.0",
   "type": "module",
   "main": "./build/index.js",
   "repository": "git@github.com:lolPants/contingency-bot.git",
