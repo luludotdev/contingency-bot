@@ -1,6 +1,4 @@
-import { join as joinPath } from 'node:path/posix'
 import { clearInterval, setInterval } from 'node:timers'
-import { dirname, importx } from '@discordx/importer'
 import { exitHook } from '@lolpants/exit'
 import { field } from '@lolpants/jogger'
 import { EmbedBuilder, IntentsBitField as Intents } from 'discord.js'
@@ -51,12 +49,12 @@ export const run = async () => {
     field('environment', IS_DEV ? 'dev' : 'prod'),
   )
 
-  const imports = joinPath(
-    dirname(import.meta.url).replaceAll('\\', '/'),
-    '/{commands,handlers,interactions}/**/*.{ts,js}',
-  )
+  await Promise.all([
+    import('~/commands/index.js'),
+    import('~/handlers/index.js'),
+    import('~/interactions/index.js'),
+  ])
 
-  await importx(imports)
   await client.login(env.TOKEN)
 }
 
