@@ -7,6 +7,9 @@
     "@lolpants/eslint-config/prettier",
     "@lolpants/eslint-config/no-deprecated"
   ],
+  "rules": {
+    "@typescript-eslint/no-use-before-define": 0
+  },
   "parserOptions": {
     "project": "./tsconfig.eslint.json"
   },
