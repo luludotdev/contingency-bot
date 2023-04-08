@@ -28,7 +28,7 @@ jobs:
       - name: Prepare
         id: prepare
         run: |
-          IMAGE_NAME=spamton
+          IMAGE_NAME=contingency-bot
 
           GIT_REPO='https://github.com/${{ github.repository }}'
           DOCKER_USER=`echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]'`
