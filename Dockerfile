@@ -35,13 +35,13 @@ RUN apk add --no-cache tini
 
 COPY --from=deps /app/.yarn ./.yarn
 COPY --from=deps /app/node_modules ./node_modules
-COPY --from=builder /app/build ./build
+COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./package.json
 
 RUN mkdir /app/logs && \
   addgroup -g 1001 -S nodejs && \
   adduser -S nodejs -u 1001 && \
-  chown -R nodejs:nodejs /app/build && \
+  chown -R nodejs:nodejs /app/dist && \
   chown -R nodejs:nodejs /app/logs
 
 USER nodejs

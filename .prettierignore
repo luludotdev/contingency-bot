@@ -6,4 +6,4 @@
 .vscode/
 
 # Generated
-build/
+dist/
