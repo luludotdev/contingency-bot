@@ -1,5 +1,5 @@
 import { field } from '@lolpants/jogger'
-import { type ArgsOf, Discord, On } from 'discordx'
+import { ArgsOf, Discord, On } from 'discordx'
 import { generateVoteButtons } from '~/lib/buttons.js'
 import { generateEmbed } from '~/lib/embeds.js'
 import { manager } from '~/lib/manager.js'

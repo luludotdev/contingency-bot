@@ -1,9 +1,5 @@
 import { field } from '@lolpants/jogger'
-import {
-  type ButtonInteraction,
-  DiscordAPIError,
-  EmbedBuilder,
-} from 'discord.js'
+import { ButtonInteraction, DiscordAPIError, EmbedBuilder } from 'discord.js'
 import { ButtonComponent, Discord } from 'discordx'
 import { env } from '~/env.js'
 import { generateVoteButtons } from '~/lib/buttons.js'

@@ -1,4 +1,5 @@
-import { type ColorResolvable, EmbedBuilder } from 'discord.js'
+import { EmbedBuilder } from 'discord.js'
+import type { ColorResolvable } from 'discord.js'
 import { Colours, DRY_RUN_PREFIX } from '~/lib/constants.js'
 
 interface EmbedOptions {

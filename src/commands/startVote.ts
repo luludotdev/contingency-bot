@@ -1,9 +1,9 @@
 import {
-  type CommandInteraction,
-  type GuildMember,
+  CommandInteraction,
   ApplicationCommandOptionType as OptionType,
   User,
 } from 'discord.js'
+import type { GuildMember } from 'discord.js'
 import { Discord, Slash, SlashOption } from 'discordx'
 import { generateInitButtons } from '~/lib/buttons.js'
 import { DRY_RUN_RICH, Reply } from '~/lib/constants.js'

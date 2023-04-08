@@ -4,9 +4,10 @@ import {
   createFileSink,
   createLogger,
   field,
-  type Field,
 } from '@lolpants/jogger'
-import { type GuildMember, type TextBasedChannel, User } from 'discord.js'
+import type { Field } from '@lolpants/jogger'
+import { User } from 'discord.js'
+import type { GuildMember, TextBasedChannel } from 'discord.js'
 import { env, IS_DEV } from '~/env.js'
 
 const consoleSink = createConsoleSink({
