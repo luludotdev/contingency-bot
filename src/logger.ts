@@ -6,8 +6,14 @@ import {
   field,
 } from '@lolpants/jogger'
 import type { Field } from '@lolpants/jogger'
-import { User } from 'discord.js'
-import type { GuildMember, TextBasedChannel } from 'discord.js'
+import { ChannelType, User } from 'discord.js'
+import type {
+  ForumChannel,
+  GuildMember,
+  Role,
+  TextBasedChannel,
+  VoiceBasedChannel,
+} from 'discord.js'
 import { env, IS_DEV } from '~/env.js'
 
 const consoleSink = createConsoleSink({
@@ -49,23 +55,36 @@ export const userField: (name: string, user: GuildMember | User) => Field = (
 
 export const channelField: (
   name: string,
-  channel: TextBasedChannel,
+  channel: ForumChannel | TextBasedChannel | VoiceBasedChannel,
 ) => Field = (name, channel) => {
+  const channelType = ChannelType[channel.type] ?? 'unknown'
+  const fields: [Field, ...Field[]] = [
+    field('id', channel.id),
+    field('type', channelType),
+  ]
+
   if (channel.isDMBased()) {
+    return field(name, ...fields, userField('recipient', channel.recipient!))
+  }
+
+  if (channel.isVoiceBased()) {
+    return field(name, ...fields, field('name', channel.name))
+  }
+
+  if (channel.isThread()) {
     return field(
       name,
-      field('id', channel.id),
-      field('type', channel.type),
-      userField('recipient', channel.recipient!),
+      ...fields,
+      field('name', `#${channel.name}`),
+      channelField('parent', channel.parent!),
     )
   }
 
-  return field(
-    name,
-    field('id', channel.id),
-    field('type', channel.type),
-    field('name', `#${channel.name}`),
-  )
+  return field(name, ...fields, field('name', `#${channel.name}`))
+}
+
+export const roleField: (name: string, role: Role) => Field = (name, role) => {
+  return field(name, field('id', role.id), field('name', role.name))
 }
 
 const traceFn = createField('fn')
