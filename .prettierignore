@@ -1,7 +1,3 @@
-# Yarn
-.yarn/
-.yarnrc.yml
-
 # VSCode
 .vscode/
 

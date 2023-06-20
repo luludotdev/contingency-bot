@@ -13,11 +13,11 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          cache: yarn
+          cache: npm
       - name: Install packages
-        run: yarn install --immutable
+        run: npm ci
       - name: Run Tests
-        run: yarn run test
+        run: npm run test
 
   build:
     name: Docker Build
