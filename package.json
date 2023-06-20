@@ -34,7 +34,7 @@
   "dependencies": {
     "@lolpants/env": "^0.6.4",
     "@lolpants/exit": "^0.2.0",
-    "@lolpants/jogger": "^0.8.1",
+    "@lolpants/jogger": "^0.9.3",
     "discord-api-types": "^0.37.46",
     "discord.js": "^14.11.0",
     "discordx": "^11.7.6",

@@ -8,7 +8,7 @@ import { Discord, Slash, SlashOption } from 'discordx'
 import { generateInitButtons } from '~/lib/buttons.js'
 import { DRY_RUN_RICH, Reply } from '~/lib/constants.js'
 import { manager } from '~/lib/manager.js'
-import { createTrace, ctxField } from '~/logger.js'
+import { createTrace, context as ctxField } from '~/logger.js'
 
 const context = ctxField('startVote')
 

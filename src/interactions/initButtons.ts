@@ -1,5 +1,4 @@
 import { setTimeout } from 'node:timers/promises'
-import { field } from '@lolpants/jogger'
 import { ButtonInteraction } from 'discord.js'
 import { ButtonComponent, Discord } from 'discordx'
 import { generateInitButtons, generateVoteButtons } from '~/lib/buttons.js'
@@ -8,9 +7,9 @@ import { generateEmbed } from '~/lib/embeds.js'
 import { interactionRX, parseInteractionID } from '~/lib/interactions.js'
 import { manager } from '~/lib/manager.js'
 import { generateMentions } from '~/lib/vote/utils.js'
-import { createTrace, ctxField, logger } from '~/logger.js'
+import { action, context, createTrace, logger } from '~/logger.js'
 
-const context = ctxField('initButtons')
+const ctx = context('initButtons')
 
 const cancelConfirmation = async (
   button: ButtonInteraction,
@@ -30,7 +29,7 @@ const cancelConfirmation = async (
 export abstract class InitButtons {
   @ButtonComponent({ id: interactionRX('init', 'confirm') })
   public async runConfirm(button: ButtonInteraction) {
-    const trace = createTrace(context, 'runConfirm')
+    const trace = createTrace(ctx, 'runConfirm')
 
     if (!button.guild) throw new Error('missing guild')
     if (!button.channel) throw new Error('missing channel')
@@ -53,10 +52,10 @@ export abstract class InitButtons {
       trace('no target id')
       await cancelConfirmation(button, Reply.ERR_GENERIC)
 
-      logger.error(
-        field('interaction', key),
-        field('error', 'targetID === undefined'),
-      )
+      logger.error({
+        interaction: key,
+        error: 'targetID === undefined',
+      })
 
       return
     }
@@ -68,7 +67,10 @@ export abstract class InitButtons {
       trace('no target')
 
       await cancelConfirmation(button, Reply.ERR_GENERIC)
-      logger.error(field('interaction', key), field('error', 'target === null'))
+      logger.error({
+        interaction: key,
+        error: 'target === null',
+      })
 
       return
     }
@@ -93,24 +95,24 @@ export abstract class InitButtons {
     const initiator = button.guild.members.cache.get(button.user.id)!
     const vote = await manager.startVote(message, initiator, target)
 
-    logger.info(
-      context,
-      field('action', 'start'),
-      field('id', vote.message.id),
-      field('initiator', initiator.user.tag),
-      field('initiatorID', initiator.id),
-      field('target', target.user.tag),
-      field('targetID', target.id),
-    )
+    logger.info({
+      ...ctx,
+      ...action('start'),
+      id: vote.message.id,
+      initiator: initiator.user.tag,
+      initiatorID: initiator.id,
+      target: target.user.tag,
+      targetID: target.id,
+    })
 
-    logger.info(
-      context,
-      field('action', 'approve'),
-      field('id', vote.message.id),
-      field('user', button.user.tag),
-      field('userID', button.user.id),
-      field('progress', vote.progress),
-    )
+    logger.info({
+      ...ctx,
+      ...action('approve'),
+      id: vote.message.id,
+      user: button.user.tag,
+      userID: button.user.id,
+      progress: vote.progress,
+    })
 
     const description = `${initiator} has started a vote to strip roles from ${target}`
     const embed = generateEmbed({

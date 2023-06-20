@@ -1,7 +1,6 @@
-import { field } from '@lolpants/jogger'
 import type { Client, GuildMember, RoleManager } from 'discord.js'
 import { env, roleMap } from '~/env.js'
-import { logger } from '~/logger.js'
+import { action, logger } from '~/logger.js'
 
 export const voteWeight: (member: GuildMember) => number = member => {
   const ROLE_WEIGHTS = roleMap(env.ROLE_WEIGHTS)
@@ -30,7 +29,11 @@ export const sweepCache: (client: Client) => Promise<number> = async client => {
     member => member.roles.cache.size === 1,
   )
 
-  logger.debug(field('action', 'sweep-members'), field('swept', swept))
+  logger.debug({
+    ...action('sweep-members'),
+    swept,
+  })
+
   return swept
 }
 
@@ -41,7 +44,11 @@ export const syncMembers: (
   const guild = await client.guilds.fetch(env.GUILD_ID)
   const members = await guild.members.fetch({ limit })
 
-  logger.info(field('action', 'sync-members'), field('members', members.size))
+  logger.info({
+    ...action('sync-members'),
+    members: members.size,
+  })
+
   return members.size
 }
 
@@ -57,10 +64,10 @@ export const generateMentions: (
     }
   } catch {
     // Warn but continue
-    logger.warn(
-      field('action', 'mentions'),
-      field('message', 'Failed to sync and sweep members!'),
-    )
+    logger.warn({
+      ...action('mentions'),
+      message: 'Failed to sync and sweep members!',
+    })
   }
 
   const members: GuildMember[] = []

@@ -1,11 +1,9 @@
 import {
   createConsoleSink,
-  createField,
   createFileSink,
   createLogger,
-  field,
 } from '@lolpants/jogger'
-import type { Field } from '@lolpants/jogger'
+import type { Data, Primitive } from '@lolpants/jogger'
 import { ChannelType, User } from 'discord.js'
 import type {
   ForumChannel,
@@ -34,64 +32,59 @@ export const logger = createLogger({
   sink: [consoleSink, fileSink],
 })
 
-export const ctxField = createField('context')
-export const errorField: <T extends Error>(error: T) => Field = error => {
-  const fields: [Field, ...Field[]] = [
-    field('type', error.name),
-    field('message', error.message),
-  ]
+export const action = (action: string): Data => ({ action })
+export const message = (message: string): Data => ({ message })
 
-  if (error.stack) fields.push(field('stack', error.stack))
-  return field('error', ...fields)
+export const context = (context: string): Data => ({ context })
+export const errorField = <T extends Error>(error: T): Data => {
+  const fields: Primitive = { type: error.name, message: error.message }
+  const all: Primitive = error.stack
+    ? { ...fields, stack: error.stack }
+    : fields
+
+  return { error: all }
 }
 
-export const userField: (name: string, user: GuildMember | User) => Field = (
-  name,
-  userLike,
-) => {
+export const userField: (user: GuildMember | User) => Primitive = userLike => {
   const user = userLike instanceof User ? userLike : userLike.user
-  return field(name, field('id', user.id), field('tag', user.tag))
+  return { id: user.id, username: user.username }
 }
 
-export const channelField: (
-  name: string,
+export const channelField = (
   channel: ForumChannel | TextBasedChannel | VoiceBasedChannel,
-) => Field = (name, channel) => {
+): Primitive => {
   const channelType = ChannelType[channel.type] ?? 'unknown'
-  const fields: [Field, ...Field[]] = [
-    field('id', channel.id),
-    field('type', channelType),
-  ]
+  const data: Primitive = {
+    id: channel.id,
+    type: channelType,
+  }
 
   if (channel.isDMBased()) {
-    return field(name, ...fields, userField('recipient', channel.recipient!))
+    return { ...data, recipient: userField(channel.recipient!) }
   }
 
   if (channel.isVoiceBased()) {
-    return field(name, ...fields, field('name', channel.name))
+    return { ...data, name: channel.name }
   }
 
   if (channel.isThread()) {
-    return field(
-      name,
-      ...fields,
-      field('name', `#${channel.name}`),
-      channelField('parent', channel.parent!),
-    )
+    return {
+      ...data,
+      name: `#${channel.name}`,
+      parent: channelField(channel.parent!),
+    }
   }
 
-  return field(name, ...fields, field('name', `#${channel.name}`))
+  return { ...data, name: `#${channel.name}` }
 }
 
-export const roleField: (name: string, role: Role) => Field = (name, role) => {
-  return field(name, field('id', role.id), field('name', role.name))
-}
+export const roleField = (role: Role): Primitive => ({
+  id: role.id,
+  name: role.name,
+})
 
-const traceFn = createField('fn')
-const trace = createField('trace')
-export const createTrace = (ctx: Field, fn: string) => {
-  const fnField = traceFn(fn)
-  return (message: string) => logger.trace(ctx, fnField, trace(message))
+export const createTrace = (ctx: Data, fn: string) => {
+  return (message: string) => logger.trace({ ...ctx, fn, trace: message })
 }
 
 export const flush = async () => fileSink.flush()

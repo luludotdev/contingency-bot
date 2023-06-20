@@ -1,13 +1,12 @@
-import { field } from '@lolpants/jogger'
 import { Discord, On } from 'discordx'
 // eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import type { ArgsOf } from 'discordx'
 import { generateVoteButtons } from '~/lib/buttons.js'
 import { generateEmbed } from '~/lib/embeds.js'
 import { manager } from '~/lib/manager.js'
-import { ctxField, logger } from '~/logger.js'
+import { action, context, logger } from '~/logger.js'
 
-const context = ctxField('message-delete')
+const ctx = context('message-delete')
 
 @Discord()
 export abstract class MessageDelete {
@@ -34,11 +33,11 @@ export abstract class MessageDelete {
     })
 
     vote.replaceMessage(newMessage)
-    logger.info(
-      context,
-      field('action', 'message-replaced'),
-      field('oldID', message.id),
-      field('newID', newMessage.id),
-    )
+    logger.info({
+      ...ctx,
+      ...action('message-replaced'),
+      oldID: message.id,
+      newID: newMessage.id,
+    })
   }
 }

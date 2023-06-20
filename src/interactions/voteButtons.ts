@@ -1,4 +1,3 @@
-import { field } from '@lolpants/jogger'
 import { ButtonInteraction, DiscordAPIError, EmbedBuilder } from 'discord.js'
 import { ButtonComponent, Discord } from 'discordx'
 import { env } from '~/env.js'
@@ -6,9 +5,9 @@ import { generateVoteButtons } from '~/lib/buttons.js'
 import { Colours, Reply, VoteResult } from '~/lib/constants.js'
 import { interactionRX } from '~/lib/interactions.js'
 import { manager } from '~/lib/manager.js'
-import { ctxField, logger } from '~/logger.js'
+import { action, context, logger } from '~/logger.js'
 
-const context = ctxField('voteButtons')
+const ctx = context('voteButtons')
 
 export const cancelVote = async (
   button: ButtonInteraction,
@@ -65,14 +64,14 @@ export abstract class VoteButtons {
     }
 
     vote.approve(member)
-    logger.info(
-      context,
-      field('action', 'approve'),
-      field('id', vote.message.id),
-      field('user', member.user.tag),
-      field('userID', member.id),
-      field('progress', vote.progress),
-    )
+    logger.info({
+      ...ctx,
+      ...action('approve'),
+      id: vote.message.id,
+      user: member.user.tag,
+      userID: member.id,
+      progress: vote.progress,
+    })
 
     const embed = EmbedBuilder.from(message.embeds[0])
     embed.data.fields ??= []
@@ -87,11 +86,11 @@ export abstract class VoteButtons {
       vote.cancel(undefined)
       await cancelVote(button, embed)
 
-      logger.info(
-        context,
-        field('action', 'passed'),
-        field('id', vote.message.id),
-      )
+      logger.info({
+        ...ctx,
+        ...action('passed'),
+        id: vote.message.id,
+      })
 
       try {
         if (env.DRY_RUN === false) {
@@ -170,14 +169,14 @@ export abstract class VoteButtons {
     }
 
     vote.revoke(member)
-    logger.info(
-      context,
-      field('action', 'revoke'),
-      field('id', vote.message.id),
-      field('user', member.user.tag),
-      field('userID', member.id),
-      field('progress', vote.progress),
-    )
+    logger.info({
+      ...ctx,
+      ...action('revoke'),
+      id: vote.message.id,
+      user: member.user.tag,
+      userID: member.id,
+      progress: vote.progress,
+    })
 
     const embed = message.embeds[0]
     embed.fields[0].value = vote.progress
@@ -227,10 +226,10 @@ export abstract class VoteButtons {
     vote.cancel(member)
     await cancelVote(button, embed)
 
-    logger.info(
-      context,
-      field('action', 'cancel'),
-      field('id', vote.message.id),
-    )
+    logger.info({
+      ...ctx,
+      ...action('cancel'),
+      id: vote.message.id,
+    })
   }
 }
