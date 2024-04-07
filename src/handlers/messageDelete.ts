@@ -14,9 +14,9 @@ export abstract class MessageDelete {
     const vote = manager.getVote(message.id)
     if (vote === undefined) return
 
-    const description = `${vote.initiator} has started a vote to strip roles from ${vote.target}`
     const embed = generateEmbed({
-      description,
+      initiator: vote.initiator,
+      target: vote.target,
       progress: vote.progress,
       votes: vote.voterList,
     })

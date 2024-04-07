@@ -114,9 +114,9 @@ export abstract class InitButtons {
       progress: vote.progress,
     })
 
-    const description = `${initiator} has started a vote to strip roles from ${target}`
     const embed = generateEmbed({
-      description,
+      initiator,
+      target,
       progress: vote.progress,
       votes: vote.voterList,
     })
