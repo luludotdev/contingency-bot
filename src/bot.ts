@@ -8,7 +8,6 @@ import { generateVoteButtons } from '~/lib/buttons.js'
 import { Colours, VoteResult } from '~/lib/constants.js'
 import { manager } from '~/lib/manager.js'
 import { getVersion } from '~/lib/version.js'
-import { sweepCache, syncMembers } from '~/lib/vote/utils.js'
 import { action, context, logger, userField } from '~/logger.js'
 
 const client = new Client({
@@ -34,9 +33,6 @@ client.once('ready', async () => {
       name: guild.name,
     },
   })
-
-  await syncMembers(client)
-  await sweepCache(client)
 })
 
 client.on('interactionCreate', interaction => {
@@ -96,16 +92,8 @@ const expireInterval = setInterval(async () => {
   }
 }, ms('60s'))
 
-const sweepInterval = setInterval(async () => {
-  // Wait for client to be ready
-  if (client.readyAt === null) return
-
-  await sweepCache(client)
-}, ms('90s'))
-
 exitHook(async exit => {
   clearInterval(expireInterval)
-  clearInterval(sweepInterval)
 
   await client.destroy()
   exit()

@@ -210,11 +210,11 @@ const createVote: (
       manager.replaceVote(oldID, newMessage.id)
     },
 
-    async mentions(sync = true) {
+    async mentions() {
       const { guild } = message
       if (guild === null) throw new Error('guild is null')
 
-      return generateMentions(guild.roles, target, sync)
+      return generateMentions(guild.roles, target)
     },
     // #endregion
   }
