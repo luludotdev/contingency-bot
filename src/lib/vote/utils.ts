@@ -1,6 +1,6 @@
 import type { Client, GuildMember, RoleManager } from 'discord.js'
 import { env, roleMap } from '~/env.js'
-import { action, logger } from '~/logger.js'
+import { action, logger, errorField } from '~/logger.js'
 
 export const voteWeight: (member: GuildMember) => number = member => {
   const ROLE_WEIGHTS = roleMap(env.ROLE_WEIGHTS)
@@ -20,8 +20,8 @@ export const sortMembersByWeight: (
   weight_a > weight_b
     ? -1
     : weight_a < weight_b
-    ? 1
-    : member_a.user.username.localeCompare(member_b.user.username)
+      ? 1
+      : member_a.user.username.localeCompare(member_b.user.username)
 
 export const sweepCache: (client: Client) => Promise<number> = async client => {
   const guild = await client.guilds.fetch(env.GUILD_ID)
@@ -62,11 +62,12 @@ export const generateMentions: (
       await syncMembers(roles.client)
       await sweepCache(roles.client)
     }
-  } catch {
+  } catch (error) {
     // Warn but continue
     logger.warn({
       ...action('mentions'),
       message: 'Failed to sync and sweep members!',
+      ...(error instanceof Error ? errorField(error) : {}),
     })
   }
 
