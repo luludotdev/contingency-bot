@@ -107,6 +107,6 @@ exitHook(async exit => {
   clearInterval(expireInterval)
   clearInterval(sweepInterval)
 
-  client.destroy()
+  await client.destroy()
   exit()
 })

@@ -1,23 +1,23 @@
 import type { GuildMember, Message } from 'discord.js'
 import ms from 'ms'
-import { generateMentions, sortMembersByWeight, voteWeight } from './utils.js'
 import { env } from '~/env.js'
+import { generateMentions, sortMembersByWeight, voteWeight } from './utils.js'
 
 export interface Manager {
-  startVote(
+  startVote: (
     message: Message,
     initiator: GuildMember,
     target: GuildMember,
-  ): Promise<Vote>
+  ) => Promise<Vote>
 
-  cancelVote(messageID: string): boolean
-  replaceVote(oldMessageID: string, newMessageID: string): void
+  cancelVote: (messageID: string) => boolean
+  replaceVote: (oldMessageID: string, newMessageID: string) => void
 
-  getVote(messageID: string): Vote | undefined
-  voteInProgress(target: GuildMember): Vote | undefined
-  getExpired(): Vote[]
+  getVote: (messageID: string) => Vote | undefined
+  voteInProgress: (target: GuildMember) => Vote | undefined
+  getExpired: () => Vote[]
 
-  canInitiate(member: GuildMember): boolean
+  canInitiate: (member: GuildMember) => boolean
 }
 
 export interface Vote {
@@ -33,18 +33,18 @@ export interface Vote {
   get voterList(): string
   get progress(): string
 
-  approve(member: GuildMember): void
-  revoke(member: GuildMember): void
-  hasVoted(member: GuildMember): boolean
+  approve: (member: GuildMember) => void
+  revoke: (member: GuildMember) => void
+  hasVoted: (member: GuildMember) => boolean
 
-  isInitiator(member: GuildMember): boolean
-  isTarget(member: GuildMember): boolean
-  canVote(member: GuildMember): boolean
+  isInitiator: (member: GuildMember) => boolean
+  isTarget: (member: GuildMember) => boolean
+  canVote: (member: GuildMember) => boolean
 
-  cancel(member: GuildMember | undefined): void
-  replaceMessage(newMessage: Message): void
+  cancel: (member: GuildMember | undefined) => void
+  replaceMessage: (newMessage: Message) => void
 
-  mentions(sync?: boolean): Promise<string[]>
+  mentions: (sync?: boolean) => Promise<string[]>
 }
 
 export const createManager: () => Manager = () => {

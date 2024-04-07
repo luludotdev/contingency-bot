@@ -57,7 +57,7 @@ export const userField: (user: GuildMember | User) => Primitive = userLike => {
 }
 
 export const channelField = (
-  channel: ForumChannel | TextBasedChannel | VoiceBasedChannel | MediaChannel,
+  channel: ForumChannel | MediaChannel | TextBasedChannel | VoiceBasedChannel,
 ): Primitive => {
   const channelType = ChannelType[channel.type] ?? 'unknown'
   const data: Primitive = {

@@ -1,5 +1,4 @@
 import { Discord, On } from 'discordx'
-// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 import type { ArgsOf } from 'discordx'
 import { generateVoteButtons } from '~/lib/buttons.js'
 import { generateEmbed } from '~/lib/embeds.js'

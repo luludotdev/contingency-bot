@@ -1,6 +1,6 @@
 import type { Client, GuildMember, RoleManager } from 'discord.js'
 import { env, roleMap } from '~/env.js'
-import { action, logger, errorField } from '~/logger.js'
+import { action, errorField, logger } from '~/logger.js'
 
 export const voteWeight: (member: GuildMember) => number = member => {
   const ROLE_WEIGHTS = roleMap(env.ROLE_WEIGHTS)
