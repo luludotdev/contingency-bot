@@ -15,7 +15,7 @@ export const generateEmbed = ({
   progress: string
   votes: string
 }): EmbedBuilder => {
-  const description = `${initiator} has started a vote to strip roles from ${target}`
+  const description = `${initiator} has started a vote to strip roles from ${target}\n**Target:** @${target.user.username} (${target.user.id})`
 
   const dryRunText = DRY_RUN_PREFIX()
   return new EmbedBuilder()
