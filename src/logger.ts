@@ -47,6 +47,11 @@ export const errorField = <T extends Error>(error: T): Data => {
 
 export const userField: (user: GuildMember | User) => Primitive = userLike => {
   const user = userLike instanceof User ? userLike : userLike.user
+
+  if (user.discriminator !== '0000') {
+    return { id: user.id, username: user.tag }
+  }
+
   return { id: user.id, username: user.username }
 }
 
