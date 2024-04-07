@@ -42,7 +42,7 @@ export const syncMembers: (
   limit?: number,
 ) => Promise<number> = async (client, limit = 500_000) => {
   const guild = await client.guilds.fetch(env.GUILD_ID)
-  const members = await guild.members.fetch({ limit })
+  const members = await guild.members.fetch({ limit, time: 240e3 })
 
   logger.info({
     ...action('sync-members'),
