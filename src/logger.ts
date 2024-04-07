@@ -8,6 +8,7 @@ import { ChannelType, User } from 'discord.js'
 import type {
   ForumChannel,
   GuildMember,
+  MediaChannel,
   Role,
   TextBasedChannel,
   VoiceBasedChannel,
@@ -56,7 +57,7 @@ export const userField: (user: GuildMember | User) => Primitive = userLike => {
 }
 
 export const channelField = (
-  channel: ForumChannel | TextBasedChannel | VoiceBasedChannel,
+  channel: ForumChannel | TextBasedChannel | VoiceBasedChannel | MediaChannel,
 ): Primitive => {
   const channelType = ChannelType[channel.type] ?? 'unknown'
   const data: Primitive = {
