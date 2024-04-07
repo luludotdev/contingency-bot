@@ -1,6 +1,6 @@
 import { clearInterval, setInterval } from 'node:timers'
 import { exitHook } from '@luludev/exit'
-import { EmbedBuilder, IntentsBitField as Intents } from 'discord.js'
+import { EmbedBuilder, Events, IntentsBitField as Intents } from 'discord.js'
 import { Client } from 'discordx'
 import ms from 'ms'
 import { env, IS_DEV } from '~/env.js'
@@ -20,7 +20,7 @@ const client = new Client({
   botGuilds: [env.GUILD_ID],
 })
 
-client.once('ready', async () => {
+client.once(Events.ClientReady, async () => {
   await client.guilds.fetch()
   await client.initApplicationCommands()
 
@@ -35,7 +35,7 @@ client.once('ready', async () => {
   })
 })
 
-client.on('interactionCreate', interaction => {
+client.on(Events.InteractionCreate, interaction => {
   void client.executeInteraction(interaction)
 })
 
