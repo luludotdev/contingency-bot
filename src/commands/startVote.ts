@@ -101,12 +101,13 @@ export abstract class StartVote {
     })
 
     const dryRunText = DRY_RUN_RICH()
-    const content = `${dryRunText}Are you sure you want to start a vote against \`${target.user.tag}\`?`
+    const content = `${dryRunText}Are you sure you want to start a vote against @${target.user.username}?`
 
     trace('sending reply')
     await ctx.reply({
       content,
       components: [buttons],
+      allowedMentions: { parse: [] },
     })
   }
 }

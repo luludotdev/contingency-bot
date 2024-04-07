@@ -99,9 +99,9 @@ export abstract class InitButtons {
       ...ctx,
       ...action('start'),
       id: vote.message.id,
-      initiator: initiator.user.tag,
+      initiator: `@${initiator.user.username}`,
       initiatorID: initiator.id,
-      target: target.user.tag,
+      target: `@${target.user.username}`,
       targetID: target.id,
     })
 
@@ -109,7 +109,7 @@ export abstract class InitButtons {
       ...ctx,
       ...action('approve'),
       id: vote.message.id,
-      user: button.user.tag,
+      user: `@${button.user.username}`,
       userID: button.user.id,
       progress: vote.progress,
     })

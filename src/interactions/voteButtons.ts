@@ -68,7 +68,7 @@ export abstract class VoteButtons {
       ...ctx,
       ...action('approve'),
       id: vote.message.id,
-      user: member.user.tag,
+      user: `@${member.user.username}`,
       userID: member.id,
       progress: vote.progress,
     })
@@ -96,7 +96,7 @@ export abstract class VoteButtons {
         if (env.DRY_RUN === false) {
           await vote.target.roles.remove(
             vote.target.roles.cache,
-            `Emergency vote called by ${vote.initiator.user.tag}`,
+            `Emergency vote called by @${vote.initiator.user.username}`,
           )
         } else {
           // Check permissions anyway
@@ -173,7 +173,7 @@ export abstract class VoteButtons {
       ...ctx,
       ...action('revoke'),
       id: vote.message.id,
-      user: member.user.tag,
+      user: `@${member.user.username}`,
       userID: member.id,
       progress: vote.progress,
     })
