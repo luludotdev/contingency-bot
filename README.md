@@ -1,10 +1,10 @@
-# 🚨 Contingency Bot ![Docker Build](https://github.com/lolPants/contingency-bot/workflows/Docker%20Build/badge.svg)
+# 🚨 Contingency Bot ![Docker Build](https://github.com/luludotdev/contingency-bot/workflows/Docker%20Build/badge.svg)
 
 > Discord Bot that implements a majority vote for extreme moderation actions against a superuser.
 
 ## 🚀 Running in Production
 
-This project uses GitHub Actions to run automated Docker builds, you can find the latest Docker image [here](https://github.com/lolPants/contingency-bot/pkgs/container/contingency-bot).
+This project uses GitHub Actions to run automated Docker builds, you can find the latest Docker image [here](https://github.com/luludotdev/contingency-bot/pkgs/container/contingency-bot).
 
 ### 📝 Configuration
 

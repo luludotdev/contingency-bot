@@ -2,8 +2,8 @@ import {
   createConsoleSink,
   createFileSink,
   createLogger,
-} from '@lolpants/jogger'
-import type { Data, Primitive } from '@lolpants/jogger'
+} from '@luludev/jogger'
+import type { Data, Primitive } from '@luludev/jogger'
 import { ChannelType, User } from 'discord.js'
 import type {
   ForumChannel,

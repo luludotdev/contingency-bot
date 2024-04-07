@@ -1,6 +1,6 @@
-import '@lolpants/env/register.js'
+import '@luludev/env/register.js'
 
-import { defineEnvironment, t } from '@lolpants/env'
+import { defineEnvironment, t } from '@luludev/env'
 import ms from 'ms'
 
 export const roleMap = (input: string) => {

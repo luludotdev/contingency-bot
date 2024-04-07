@@ -1,5 +1,5 @@
 import { clearInterval, setInterval } from 'node:timers'
-import { exitHook } from '@lolpants/exit'
+import { exitHook } from '@luludev/exit'
 import { EmbedBuilder, IntentsBitField as Intents } from 'discord.js'
 import { Client } from 'discordx'
 import ms from 'ms'
