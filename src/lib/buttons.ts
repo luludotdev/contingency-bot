@@ -1,15 +1,11 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js'
 import { interactionID } from '~/lib/interactions.js'
 
-interface InitButtonOptions {
+export const generateInitButtons = (options: {
   disabled?: boolean
   confirmData?: string[]
   cancelData?: string[]
-}
-
-export const generateInitButtons: (
-  options: InitButtonOptions,
-) => ActionRowBuilder<ButtonBuilder> = options => {
+}): ActionRowBuilder<ButtonBuilder> => {
   const disabled = options.disabled ?? false
   const context = disabled ? 'dummy' : 'init'
 
@@ -31,16 +27,12 @@ export const generateInitButtons: (
   return new ActionRowBuilder<ButtonBuilder>().addComponents(confirm, cancel)
 }
 
-interface VoteButtonOptions {
+export const generateVoteButtons = (options: {
   disabled?: boolean
   approveData?: string[]
   revokeData?: string[]
   cancelData?: string[]
-}
-
-export const generateVoteButtons: (
-  options: VoteButtonOptions,
-) => ActionRowBuilder<ButtonBuilder> = options => {
+}): ActionRowBuilder<ButtonBuilder> => {
   const disabled = options.disabled ?? false
   const context = disabled ? 'dummy' : 'vote'
 

@@ -1,7 +1,7 @@
 import { execa } from 'execa'
 import { env } from '~/env.js'
 
-export const getVersion: () => Promise<string> = async () => {
+export const getVersion = async (): Promise<string> => {
   if (env.GIT_VERSION) return env.GIT_VERSION
 
   try {

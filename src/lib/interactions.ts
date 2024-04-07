@@ -1,13 +1,11 @@
-export const interactionRX: (context: string, id: string) => RegExp = (
-  context,
-  id,
-) => new RegExp(`^${context}@${id}/?`)
+export const interactionRX = (context: string, id: string): RegExp =>
+  new RegExp(`^${context}@${id}/?`)
 
-export const interactionID: (
+export const interactionID = (
   context: string,
   id: string,
   ...components: string[]
-) => string = (context, id, ...components) => {
+): string => {
   const start = `${context}@${id}`
   if (components.length === 0) return start
 
@@ -15,11 +13,11 @@ export const interactionID: (
   return `${start}/${joined}`
 }
 
-interface ParsedInteraction {
-  context: string
-  id: string
-  key: string
-  components: string[]
+type ParsedInteraction = {
+  readonly context: string
+  readonly id: string
+  readonly key: string
+  readonly components: string[]
 }
 
 export const parseInteractionID: (id: string) => ParsedInteraction = rawID => {
